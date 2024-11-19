@@ -1,0 +1,7 @@
+name: Factions
+version: '1.0'
+main: me.cirosanchez.factions.Factions
+api-version: '1.13'
+load: POSTWORLD
+softdepend:
+  - Multiverse-Core

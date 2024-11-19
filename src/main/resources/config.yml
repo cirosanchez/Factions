@@ -1,0 +1,18 @@
+mongo:
+  uri: ""
+  database: "Factions"
+
+worlds:
+  main: "main"
+  wilderness: "wilderness"
+  nether: "nether"
+  end: "end"
+  events: "events"
+
+spawn:
+  # Name of the spawn
+  name: "<green>Spawn</green>"
+  # Time it takes to teleport spawn
+  time-to-tp: 3
+  # Radius that player can move around without cancelling spawn
+  radius: 5
