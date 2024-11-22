@@ -1,5 +1,6 @@
 mongo:
-  uri: mongodb+srv://ciroandressanchezbuitrago:0ZK8VHIRSJglJBMM@personal.p0j5b.mongodb.net/?retryWrites=true&w=majority&appName=personal
+  # z0giZcc04t6f0zvg
+  uri: mongodb+srv://ciroandressanchezbuitrago:z0giZcc04t6f0zvg@personal.p0j5b.mongodb.net/?retryWrites=true&w=majority&appName=personal
   database: Factions
 
 worlds:

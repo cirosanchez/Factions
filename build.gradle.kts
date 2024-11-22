@@ -22,8 +22,10 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
     implementation("com.github.cirosanchez:cLib:v0.2.4")
-    implementation("gg.flyte:twilight:1.1.15")
-
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation("org.mongodb:bson:4.3.4")
+    implementation("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
+    implementation(kotlin("reflect"))
 }
 
 val targetJavaVersion = 21
