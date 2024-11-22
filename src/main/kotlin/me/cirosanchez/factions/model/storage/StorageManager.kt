@@ -40,13 +40,23 @@ class StorageManager {
     }
 
     fun <T : MongoSerializable> readObjects(type: KClass<T>): List<T> {
-        return collection(type).find().get().toList() as List<T>
+        val list =  collection(type).find().get().toList()
+
+        if (list.isEmpty()) return listOf<T>()
+        return list as List<T>
     }
 
 
 
     fun load(){
-        plugin.spawnManager.spawn = readObjects(Spawn::class).first() as Spawn
+        val spawnFromDb = readObjects(Spawn::class).firstOrNull() as Spawn?
+
+        if (spawnFromDb == null) {
+            plugin.spawnManager.spawn = Spawn(location = null)
+            return
+        }
+
+        plugin.spawnManager.spawn = spawnFromDb
     }
 
     fun unload(){
