@@ -1,13 +1,14 @@
 package me.cirosanchez.factions.model.world
 
+import me.cirosanchez.clib.configuration.Configuration
+import me.cirosanchez.clib.configuration.Configuration.Companion.config
 import me.cirosanchez.factions.Factions
-import me.cirosanchez.factions.util.FileConfiguration
 import me.cirosanchez.factions.util.InvalidConfigurationException
 import org.bukkit.Bukkit
 import org.bukkit.World
 
 class WorldManager {
-    var config: FileConfiguration = Factions.get().configFile
+    lateinit var config: Configuration
 
     lateinit var mainWorld: World
     lateinit var wildernessWorld: World
@@ -16,6 +17,7 @@ class WorldManager {
     lateinit var eventsWorld: World
 
     fun load(){
+        config = Factions.get().configurationManager.config
         val worldsNode = config.getConfigurationSection("worlds")
 
         if (worldsNode == null){
@@ -27,17 +29,6 @@ class WorldManager {
         val netherWorldName = worldsNode.getString("nether") ?: throw InvalidConfigurationException("'worlds.nether' child in config.yml isn't present. Please, check config.yml and contact support.")
         val endWorldName = worldsNode.getString("end") ?: throw InvalidConfigurationException("'worlds.end' child in config.yml isn't present. Please, check config.yml and contact support.")
         val eventsWorldName = worldsNode.getString("events") ?: throw InvalidConfigurationException("'worlds.events' child in config.yml isn't present. Please, check config.yml and contact support.")
-
-
-        Bukkit.getWorlds().forEach {
-            println(it.name)
-        }
-        println("----------------------------------")
-        println(mainWorldName)
-        println(wildernessWorldName)
-        println(netherWorldName)
-        println(endWorldName)
-        println(eventsWorldName)
 
         mainWorld = Bukkit.getWorld(mainWorldName) ?: throw InvalidConfigurationException("$mainWorldName isn't a world. Please, create the world and restart the server.")
         wildernessWorld = Bukkit.getWorld(wildernessWorldName) ?: throw InvalidConfigurationException("$wildernessWorldName isn't a world. Please, create the world and restart the server.")

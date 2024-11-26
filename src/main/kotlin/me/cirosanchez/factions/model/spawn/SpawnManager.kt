@@ -1,15 +1,18 @@
 package me.cirosanchez.factions.model.spawn
 
-import com.google.gson.annotations.Expose
 import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFile
 import me.cirosanchez.clib.placeholder.Placeholder
 import me.cirosanchez.factions.Factions
+import me.cirosanchez.factions.model.Manager
 import me.cirosanchez.factions.util.EmptyPlaceholder
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
-class SpawnManager {
+class SpawnManager : Manager {
+
+    lateinit var plugin: Factions
+    var seconds: Int = 0
 
     var spawn = Spawn(location = null)
 
@@ -17,13 +20,25 @@ class SpawnManager {
 
     val countdown: HashMap<Player, Int> = hashMapOf()
 
+    override fun load(){
+        plugin = Factions.get()
+        seconds = Factions.get().configurationManager.config.getInt("spawn.time-to-tp")
 
-    val seconds = Factions.get().configFile.getInt("spawn.time-to-tp")
-
-    init {
         Bukkit.getScheduler().runTaskTimer(Factions.get(), PlayerSpawnTimerCountdownRunnable(this), 0L, 20L)
+
+        val spawnFromDb = plugin.storageManager.readObjects(Spawn::class).firstOrNull() as Spawn?
+
+        if (spawnFromDb == null) {
+            plugin.spawnManager.spawn = Spawn(location = null)
+            return
+        }
+
+        spawn = spawnFromDb
     }
 
+    override fun unload() {
+        plugin.storageManager.saveObject(spawn)
+    }
 
     fun setSpawn(loc: Location){
         this.spawn.location = loc

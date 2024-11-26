@@ -1,12 +1,12 @@
 package me.cirosanchez.factions.listener
 
 import me.cirosanchez.clib.cuboid.Cuboid
-import me.cirosanchez.clib.extension.send
 import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFile
 import me.cirosanchez.clib.placeholder.Placeholder
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.model.region.Region
 import me.cirosanchez.factions.model.region.RegionType
+import me.cirosanchez.factions.model.region.util.PlayerRegionChangeEvent
 import me.cirosanchez.factions.util.EmptyPlaceholder
 import me.cirosanchez.factions.util.WandSession
 import me.cirosanchez.factions.util.WandType
@@ -19,18 +19,19 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.persistence.PersistentDataType
-import sun.net.www.content.text.plain
 import java.util.*
 import kotlin.collections.HashMap
 
 class PlayerListener : Listener {
 
+    val userManager = Factions.get().userManager
     val regionManager = Factions.get().regionManager
     val spawnManager = Factions.get().spawnManager
 
-    val spawnRadius = Factions.get().configFile.getInt("spawn.radius")
+    val spawnRadius = Factions.get().configurationManager.config.getInt("spawn.radius")
 
 
 
@@ -117,7 +118,7 @@ class PlayerListener : Listener {
                             return
                         }
                         val cuboid = Cuboid(session.pos1, session.pos2)
-                        val region = Region(Factions.get().configFile.getString("spawn.name") ?: "<green>Spawn</green>", cuboid, false, RegionType.SPAWN, UUID.randomUUID())
+                        val region = Region(Factions.get().configurationManager.config.getString("spawn.name") ?: "<green>Spawn</green>", cuboid, false, RegionType.SPAWN, UUID.randomUUID())
 
                         regionManager.addRegion(region)
                         p.sendColorizedMessageFromMessagesFile("spawn.claimed", Placeholder("{pos1}", session.pos1!!.toPrettyStringWithoutWorld()),
@@ -134,4 +135,27 @@ class PlayerListener : Listener {
         }
     }
 
+
+    /*
+    REGION IN, OUT RELATED
+     */
+    @EventHandler
+    fun region(event: PlayerRegionChangeEvent){
+        val from = event.from
+        val to = event.to
+        val player = event.player
+
+        player.sendMessage("${from.name} >>> ${to.name}")
+    }
+
+    /*
+    User related
+     */
+    @EventHandler
+    fun playerJoin(event: PlayerJoinEvent){
+        val player = event.player
+        if (!userManager.userPresent(player)){
+            userManager.createNewUser(player)
+        }
+    }
 }

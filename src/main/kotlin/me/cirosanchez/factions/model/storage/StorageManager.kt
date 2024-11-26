@@ -1,39 +1,18 @@
 package me.cirosanchez.factions.model.storage
 
-import gg.flyte.twilight.data.MongoDB
-import gg.flyte.twilight.data.MongoDB.collection
-import gg.flyte.twilight.data.MongoSerializable
-import gg.flyte.twilight.twilight
+import me.cirosanchez.clib.cLib
+import me.cirosanchez.clib.exception.InvalidConfigurationException
+import me.cirosanchez.clib.storage.MongoDB.collection
+import me.cirosanchez.clib.storage.MongoSerializable
 import me.cirosanchez.factions.Factions
-import me.cirosanchez.factions.model.spawn.Spawn
+import me.cirosanchez.factions.model.Manager
+
 import org.bukkit.Bukkit
+
 import kotlin.reflect.KClass
 
-class StorageManager {
-    private val plugin = Factions.get()
-
-    init {
-        val uri = plugin.configFile.getString("mongo.uri")
-        val dbName = plugin.configFile.getString("mongo.database")
-
-        if (uri.isNullOrEmpty()) {
-            plugin.logger.severe("MongoDB URI is not present. Shutting off.")
-            Bukkit.getPluginManager().disablePlugin(plugin)
-            throw org.bukkit.configuration.InvalidConfigurationException()
-        }
-        if (dbName.isNullOrEmpty()){
-            plugin.logger.severe("MongoDB Database name is not present. Shutting off.")
-            Bukkit.getPluginManager().disablePlugin(plugin)
-            throw org.bukkit.configuration.InvalidConfigurationException()
-        }
-
-        twilight(plugin){
-            mongo {
-                this.uri = uri
-                this.database = dbName
-            }
-        }
-    }
+class StorageManager : Manager {
+    lateinit var plugin: Factions
 
     fun <T : MongoSerializable> saveObject(obj: T){
         obj.save().get()
@@ -46,20 +25,12 @@ class StorageManager {
         return list as List<T>
     }
 
-
-
-    fun load(){
-        val spawnFromDb = readObjects(Spawn::class).firstOrNull() as Spawn?
-
-        if (spawnFromDb == null) {
-            plugin.spawnManager.spawn = Spawn(location = null)
-            return
-        }
-
-        plugin.spawnManager.spawn = spawnFromDb
+    override fun load() {
+        // Nothing in here, yay!
     }
 
-    fun unload(){
-        saveObject(plugin.spawnManager.spawn)
+    override fun unload() {
+        // Nothing in here, yay!
     }
+
 }

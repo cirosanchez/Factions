@@ -1,7 +1,7 @@
 package me.cirosanchez.factions.model.spawn
-import gg.flyte.twilight.data.Id
-import gg.flyte.twilight.data.MongoSerializable
 
+import me.cirosanchez.clib.storage.Id
+import me.cirosanchez.clib.storage.MongoSerializable
 import org.bukkit.Location
 import java.util.*
 

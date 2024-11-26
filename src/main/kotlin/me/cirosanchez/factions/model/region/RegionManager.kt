@@ -1,7 +1,7 @@
 package me.cirosanchez.factions.model.region
 
-import com.google.gson.annotations.Expose
 import me.cirosanchez.factions.Factions
+import me.cirosanchez.factions.model.region.util.RegionListener
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Player
@@ -10,9 +10,8 @@ import java.util.*
 class RegionManager {
 
 
-    val plugin = Factions.get()
+    lateinit var plugin: Factions
 
-    @Expose
     var regions: MutableMap<World, MutableSet<Region>> = hashMapOf()
 
     val warzone = Region("<red>Warzone</red>", null, true, RegionType.WARZONE, UUID.fromString("9a5a6bd2-fa69-4f5a-b612-17d281123e97"))
@@ -20,13 +19,27 @@ class RegionManager {
     val wilderness = Region("<gray>Wilderness</gray>", null, true, RegionType.WILDERNESS, UUID.fromString("47d21880-f8b0-45d0-a25d-4a22fac6cd01"))
 
     fun load() {
+        plugin = Factions.get()
         val worldsManager = plugin.worldManager
+        plugin.server.pluginManager.registerEvents(RegionListener, plugin)
 
         regions.put(worldsManager.mainWorld, mutableSetOf())
         regions.put(worldsManager.wildernessWorld, mutableSetOf())
         regions.put(worldsManager.netherWorld, mutableSetOf())
         regions.put(worldsManager.endWorld, mutableSetOf())
         regions.put(worldsManager.eventsWorld, mutableSetOf())
+
+        val regions = plugin.storageManager.readObjects(Region::class)
+        for (region in regions){
+            println(region.name )
+        }
+    }
+
+
+    fun unload(){
+        for (region in getAllRegions()){
+            plugin.storageManager.saveObject<Region>(region)
+        }
     }
 
     fun addRegion(region: Region){

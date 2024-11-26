@@ -2,6 +2,10 @@ mongo:
   uri: ""
   database: "Factions"
 
+# In seconds
+user-saving-rate: 300
+
+
 worlds:
   main: "main"
   wilderness: "wilderness"

@@ -21,36 +21,34 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
-    implementation("com.github.cirosanchez:cLib:v0.2.4")
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation("com.github.cirosanchez:cLib:-SNAPSHOT")
     implementation("org.mongodb:bson:4.3.4")
-    implementation("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
-    implementation(kotlin("reflect"))
-}
 
-val targetJavaVersion = 21
-kotlin {
-    jvmToolchain(targetJavaVersion)
-}
 
-tasks.build {
-    dependsOn("shadowJar")
-}
-
-tasks.processResources {
-    val props = mapOf("version" to version)
-    inputs.properties(props)
-    filteringCharset = "UTF-8"
-    filesMatching("plugin.yml") {
-        expand(props)
+    val targetJavaVersion = 21
+    kotlin {
+        jvmToolchain(targetJavaVersion)
     }
-}
 
-tasks {
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.21.1")
+    tasks.build {
+        dependsOn("shadowJar")
+    }
+
+    tasks.processResources {
+        val props = mapOf("version" to version)
+        inputs.properties(props)
+        filteringCharset = "UTF-8"
+        filesMatching("plugin.yml") {
+            expand(props)
+        }
+    }
+
+    tasks {
+        runServer {
+            // Configure the Minecraft version for our task.
+            // This is the only required configuration besides applying the plugin.
+            // Your plugin's jar (or shadowJar if present) will be used automatically.
+            minecraftVersion("1.21.1")
+        }
     }
 }

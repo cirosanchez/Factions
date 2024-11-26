@@ -10,6 +10,5 @@ class FileConfiguration(val string: String) : Configuration() {
     fun load(): FileConfiguration {
         super.loadConfig()
         return this
-
     }
 }
