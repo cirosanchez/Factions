@@ -13,8 +13,11 @@ import me.cirosanchez.factions.model.configuration.ConfigurationManager
 import me.cirosanchez.factions.model.region.RegionManager
 import me.cirosanchez.factions.model.spawn.SpawnManager
 import me.cirosanchez.factions.model.storage.StorageManager
+import me.cirosanchez.factions.model.team.Team
+import me.cirosanchez.factions.model.team.TeamManager
 import me.cirosanchez.factions.model.user.UserManager
 import me.cirosanchez.factions.model.world.WorldManager
+import me.cirosanchez.factions.util.InventoryTypeAdapter
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
@@ -35,6 +38,7 @@ class Factions : JavaPlugin() {
     val storageManager: StorageManager = StorageManager()
     val spawnManager: SpawnManager = SpawnManager()
     val userManager: UserManager = UserManager()
+    val teamManager: TeamManager = TeamManager()
     lateinit var commandHandler: BukkitCommandHandler
 
     override fun onEnable() {
@@ -52,6 +56,7 @@ class Factions : JavaPlugin() {
         regionManager.unload()
         spawnManager.unload()
         userManager.unload()
+        teamManager.unload()
     }
 
 
@@ -80,7 +85,7 @@ class Factions : JavaPlugin() {
             mongoURI = uri
             mongoDB = dbName
             adapters = mutableListOf(LocationAdapter, WorldAdapter,
-                DurationTypeAdapter()) as MutableList<Adapter<Any>>
+                DurationTypeAdapter(), InventoryTypeAdapter()) as MutableList<Adapter<Any>>
         }
 
         worldManager.load()
@@ -88,6 +93,7 @@ class Factions : JavaPlugin() {
         storageManager.load()
         spawnManager.load()
         userManager.load()
+        teamManager.load()
     }
 
 }

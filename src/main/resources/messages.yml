@@ -10,3 +10,21 @@ spawn:
   pos: "<green>Set position {number} to: {location}</green>"
   claimed: "<green>Claimed between {pos1} and {pos2}</green>"
   positions-missing: "<red>Set all the positions to finish claiming process</red>"
+
+team:
+  default:
+    1: "<blue>Team Commands</blue>"
+    2: "<gray><st>---------------------------------------------------</st></gray>"
+    3: "<blue>/t create</blue>: Create a new team."
+    4: "<blue>/t info [name|player]</blue>: Create a new team."
+    5: "<blue>/t disband</blue>: Disband your team."
+    6: "<blue>/t rename <name></blue>: Rename your team."
+    7: "<blue>/t invite <player></blue>: Invite a player to your team."
+    8: "<blue>/t disinvite <player></blue>: Disinvite a player from your team."
+    9: "<blue>/t kick <player></blue>: Kick a member from your team."
+    10: "<blue>/t promote <player></blue>: Promote a member's rank."
+    11: "<blue>/t demote <player></blue>: Demote a member's rank."
+    12: "<blue>/t vault </blue>: Open the team's public vault."
+    13: "<gray><st>---------------------------------------------------</st></gray>"
+  info:
+    no-team: "<red>There's no team with player or named {name}.</red>"

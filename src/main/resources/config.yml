@@ -3,7 +3,7 @@ mongo:
   database: "Factions"
 
 # In seconds
-user-saving-rate: 300
+db-saving-rate: 300
 
 
 worlds:

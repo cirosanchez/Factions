@@ -27,7 +27,7 @@ class UserManager : Manager {
             }
         }
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, 100L, plugin.configurationManager.config.getLong("user-saving-rate")*20)
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, 100L, plugin.configurationManager.config.getLong("db-saving-rate")*20)
     }
 
     override fun unload() {
@@ -39,6 +39,15 @@ class UserManager : Manager {
 
     fun getUser(player: Player): User? {
         return users.get(player.uniqueId)
+    }
+
+    fun getUser(uuid: UUID): User? {
+        return users.get(uuid)
+    }
+
+    @Deprecated("Use UserManager#getUser(UUID) instead.")
+    fun getUser(name: String): User? {
+        return users.get(Bukkit.getPlayer(name)?.uniqueId)
     }
 
     fun userPresent(player: Player): Boolean {
