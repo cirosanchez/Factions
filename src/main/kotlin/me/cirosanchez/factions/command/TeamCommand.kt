@@ -28,7 +28,7 @@ class TeamCommand {
     }
 
     @Subcommand("info", "i", "who", "w")
-    @CommandPermission("factions.command.info")
+    @CommandPermission("factions.command.team.info")
     fun info(actor: Player, @Optional name: String){
         val player = Bukkit.getOfflinePlayer(name)
 
@@ -119,5 +119,21 @@ class TeamCommand {
             actor.send("Home: ${home.toPrettyStringWithoutWorld()}")
         }
         actor.send("<gray><st>--------------------------------------------------</st>")
+    }
+
+
+    @Subcommand("create")
+    @CommandPermission("factions.command.team.create")
+    fun create(actor: Player, name: String){
+        val team = actor.getTeam()
+
+        if (team != null){
+            actor.sendColorizedMessageFromMessagesFile("team.create.already-in-team")
+            return
+        }
+
+        plugin.teamManager.createTeam(name, actor)
+        actor.sendColorizedMessageFromMessagesFile("team.create.created", Placeholder("{name}", name))
+
     }
 }

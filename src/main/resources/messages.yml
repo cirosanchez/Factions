@@ -28,3 +28,7 @@ team:
     13: "<gray><st>---------------------------------------------------</st></gray>"
   info:
     no-team: "<red>There's no team with player or named {name}.</red>"
+  create:
+    already-in-team: "<red>You're already in a team!</red>"
+    created: "You've created team: <green>{name}</green>."
+    broadcast: "<blue>{name}</blue> has created <green>{team}</green>."
