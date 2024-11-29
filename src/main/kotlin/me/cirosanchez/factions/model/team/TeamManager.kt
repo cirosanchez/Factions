@@ -69,7 +69,7 @@ class TeamManager : Manager {
         this.teams.put(name, team)
     }
 
-    fun deleteTeam(leader: Player){
+    fun disbandTeam(leader: Player){
         val team = leader.getTeam()
 
         if (team == null) return

@@ -25,10 +25,17 @@ team:
     10: "<blue>/t promote <player></blue>: Promote a member's rank."
     11: "<blue>/t demote <player></blue>: Demote a member's rank."
     12: "<blue>/t vault </blue>: Open the team's public vault."
-    13: "<gray><st>---------------------------------------------------</st></gray>"
+    13: "<blue>/t open </blue>: Let any person join your team."
+    14: "<blue>/t join <name|player></blue>: Join a team."
+    15: "<blue>/t leave </blue>: Leave your current team."
+    16: "<gray><st>---------------------------------------------------</st></gray>"
   info:
     no-team: "<red>There's no team with player or named {name}.</red>"
   create:
     already-in-team: "<red>You're already in a team!</red>"
     created: "You've created team: <green>{name}</green>."
-    broadcast: "<blue>{name}</blue> has created <green>{team}</green>."
+    broadcast: "<blue>{player}</blue> has created <green>{name}</green>."
+  delete:
+    not-leader: "<red>You must be the leader to disband the team.</red>"
+    disbanded: "<red>You've disbanded the team.</red>"
+    broadcast: "<blue>{player}</blue> has disbanded <red>{name}</red>."

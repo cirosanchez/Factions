@@ -4,6 +4,7 @@ import me.cirosanchez.clib.extension.colorize
 import me.cirosanchez.clib.extension.send
 import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFile
 import me.cirosanchez.clib.placeholder.Placeholder
+import me.cirosanchez.factions.util.broadcastFromConfiguration
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.util.getTeam
 import me.cirosanchez.factions.util.toPrettyStringWithoutWorld
@@ -134,6 +135,26 @@ class TeamCommand {
 
         plugin.teamManager.createTeam(name, actor)
         actor.sendColorizedMessageFromMessagesFile("team.create.created", Placeholder("{name}", name))
+        broadcastFromConfiguration("team.create.broadcast", Placeholder("{name}", name), Placeholder("{player}", actor.name))
+    }
 
+    @Subcommand("disband")
+    @CommandPermission("factions.command.team.disband")
+    fun disband(actor: Player){
+        val team = actor.getTeam()
+
+        if (team == null){
+            actor.sendColorizedMessageFromMessagesFile("team.disband.no-team")
+            return
+        }
+
+        if (!team.isLeader(actor)){
+            actor.sendColorizedMessageFromMessagesFile("team.disband.not-leader")
+            return
+        }
+
+        plugin.teamManager.disbandTeam(actor)
+        actor.sendColorizedMessageFromMessagesFile("team.disband.disbanded")
+        broadcastFromConfiguration("team.disband.broadcast", Placeholder("{name}", team.name), Placeholder("{player}", actor.name))
     }
 }
