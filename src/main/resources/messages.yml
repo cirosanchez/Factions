@@ -39,3 +39,10 @@ team:
     not-leader: "<red>You must be the leader to disband the team.</red>"
     disbanded: "<red>You've disbanded the team.</red>"
     broadcast: "<blue>{player}</blue> has disbanded <red>{name}</red>."
+  invite:
+    not-in-a-team: "<red>You must be in a team to invite someone.</red"
+    not-captain: "<red>You must be a captain to invite someone.</red>"
+    invited: "<blue>{name}</blue> has been invited to join the team."
+    already-invited: "<red>{name} has already been invited.</red>"
+    send-to-online-player: "<blue>{name}</blue> has invited you to join <green>{team}</green>."
+    send-to-online-team: "<blue>{name}</blue> has invited <green>{player}</green> to join the team."

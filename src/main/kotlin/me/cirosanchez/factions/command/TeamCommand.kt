@@ -9,6 +9,7 @@ import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.util.getTeam
 import me.cirosanchez.factions.util.toPrettyStringWithoutWorld
 import org.bukkit.Bukkit
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import revxrsal.commands.annotation.Command
 import revxrsal.commands.annotation.DefaultFor
@@ -156,5 +157,58 @@ class TeamCommand {
         plugin.teamManager.disbandTeam(actor)
         actor.sendColorizedMessageFromMessagesFile("team.disband.disbanded")
         broadcastFromConfiguration("team.disband.broadcast", Placeholder("{name}", team.name), Placeholder("{player}", actor.name))
+    }
+
+    @Subcommand("invite")
+    @CommandPermission("factions.command.team.invite")
+    fun invite(actor: Player, name: String){
+        val team = actor.getTeam()
+
+        if (team == null){
+            actor.sendColorizedMessageFromMessagesFile("team.invite.not-in-a-team")
+            return
+        }
+
+        if (team.isMember(actor)){
+            actor.sendColorizedMessageFromMessagesFile("team.invite.not-captain")
+            return
+        }
+
+        val player = resolvePlayerName(name)
+
+        if (player == null) return
+
+        if (team.isInvited(player)){
+            actor.sendColorizedMessageFromMessagesFile("team.invite.already-invited", Placeholder("{name}", player.name!!))
+            return
+        }
+
+        team.invite(player)
+        actor.sendColorizedMessageFromMessagesFile("team.invite.invited", Placeholder("{name}", player.name!!))
+
+        if (player.isOnline){
+            player.player!!.sendColorizedMessageFromMessagesFile("team.invite.send-to-online-player", Placeholder("{name}", player.name!!), Placeholder("{team}", team.name))
+        }
+
+        for (member in team.getOnlineMembers()){
+            if (member != actor){
+                member.sendColorizedMessageFromMessagesFile("team.invite.send-to-team", Placeholder("{name}", actor.name), Placeholder("{team}", team.name),
+                    Placeholder("{player}", player.name!!))
+            }
+        }
+    }
+
+    @Subcommand("disinvite")
+
+
+
+
+    fun resolvePlayerName(name: String): OfflinePlayer? {
+        val player = Bukkit.getOfflinePlayer(name)
+        if (player.hasPlayedBefore()){
+            return player
+        } else {
+            return null
+        }
     }
 }

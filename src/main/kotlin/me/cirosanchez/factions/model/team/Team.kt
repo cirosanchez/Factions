@@ -21,7 +21,8 @@ data class Team(@Id var name: String,
                 var kills: Long,
                 var claim: Region?,
                 var home: Location?,
-                var vault: Inventory
+                var vault: Inventory,
+                var invites: MutableSet<UUID>
                 ) : MongoSerializable {
 
     fun getLeader(): OfflinePlayer {
@@ -142,6 +143,14 @@ data class Team(@Id var name: String,
 
     fun getOfflineMembers(): Set<OfflinePlayer> {
         return getAbsoluteMembers().filter { !it.isOnline }.toSet()
+    }
+
+    fun isInvited(offlinePlayer: OfflinePlayer): Boolean {
+        return invites.contains(offlinePlayer.uniqueId)
+    }
+
+    fun invite(offlinePlayer: OfflinePlayer) {
+        invites.add(offlinePlayer.uniqueId)
     }
 
 }
