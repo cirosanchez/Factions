@@ -12,6 +12,10 @@ spawn:
   positions-missing: "<red>Set all the positions to finish claiming process</red>"
 
 team:
+  not-in-a-team: "<red>You must be in a team to use this command.</red>"
+  not-leader: "<red>You must be the leader to use this command.</red>"
+  not-captain: "<red>You must be a captain to use this command.</red>"
+  not-coleader: "<red>You must be a co-leader to use this command.</red>"
   default:
     1: "<blue>Team Commands</blue>"
     2: "<gray><st>---------------------------------------------------</st></gray>"
@@ -36,13 +40,23 @@ team:
     created: "You've created team: <green>{name}</green>."
     broadcast: "<blue>{player}</blue> has created <green>{name}</green>."
   delete:
-    not-leader: "<red>You must be the leader to disband the team.</red>"
     disbanded: "<red>You've disbanded the team.</red>"
     broadcast: "<blue>{player}</blue> has disbanded <red>{name}</red>."
   invite:
-    not-in-a-team: "<red>You must be in a team to invite someone.</red"
-    not-captain: "<red>You must be a captain to invite someone.</red>"
     invited: "<blue>{name}</blue> has been invited to join the team."
     already-invited: "<red>{name} has already been invited.</red>"
     send-to-online-player: "<blue>{name}</blue> has invited you to join <green>{team}</green>."
     send-to-online-team: "<blue>{name}</blue> has invited <green>{player}</green> to join the team."
+  disinvite:
+    disinvited: "<blue>{name}</blue> has been disinvited from the team."
+    not-invited: "<red>{name} is not invited.</red>"
+    send-to-online-player: "<blue>{name}</blue> has disinvited you from <green>{team}</green>."
+    send-to-online-team: "<blue>{name}</blue> has disinvited <green>{player}</green> from the team."
+  kick:
+    not-in-team: "<red>{name} is not in the team.</red>"
+    kicked: "<blue>{name}</blue> has been kicked from the team."
+    send-to-online-player: "<yellow>You've been kicked from <green>{team}</yellow>."
+    send-to-online-team: "<blue>{name}</blue> has kicked <green>{player}</green> from the team."
+  promote:
+    not-leader: "<red>You must be the leader to promote a member.</red>"
+    not-a-member: "<red>{player} is not a member of the team.</red>"

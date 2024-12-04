@@ -10,11 +10,10 @@ import org.bukkit.event.inventory.InventoryType
 
 class TeamManager : Manager {
 
-    val plugin = Factions.get()
-
     val teams: HashMap<String, Team> = hashMapOf()
 
     override fun load() {
+        val plugin = Factions.get()
         val dbTeams = plugin.storageManager.readObjects<Team>(Team::class)
         for (team in dbTeams){
             teams.put(team.name, team)
@@ -30,6 +29,7 @@ class TeamManager : Manager {
     }
 
     override fun unload() {
+        val plugin = Factions.get()
         for (team in teams.values){
             plugin.storageManager.saveObject(team)
         }
@@ -64,7 +64,9 @@ class TeamManager : Manager {
         }
 
         val team = Team(name, leader.uniqueId, mutableSetOf(), mutableSetOf(), mutableSetOf(), 0, 0, 0, null, null, Bukkit.createInventory(null,
-            InventoryType.CHEST))
+            InventoryType.CHEST),
+            mutableSetOf()
+        )
 
         this.teams.put(name, team)
     }

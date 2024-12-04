@@ -153,4 +153,26 @@ data class Team(@Id var name: String,
         invites.add(offlinePlayer.uniqueId)
     }
 
+    fun disinvite(offlinePlayer: OfflinePlayer) {
+        invites.remove(offlinePlayer.uniqueId)
+    }
+
+    fun kick(offlinePlayer: OfflinePlayer){
+        if (isLeader(offlinePlayer)){
+            return
+        }
+
+        if (isCoLeader(offlinePlayer)){
+            coleaders.remove(offlinePlayer.uniqueId)
+        }
+
+        if (isCaptain(offlinePlayer)){
+            captains.remove(offlinePlayer.uniqueId)
+        }
+
+        if (isMember(offlinePlayer)){
+            members.remove(offlinePlayer.uniqueId)
+        }
+    }
+
 }

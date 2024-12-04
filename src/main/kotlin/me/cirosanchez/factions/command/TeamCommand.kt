@@ -1,5 +1,6 @@
 package me.cirosanchez.factions.command
 
+import me.cirosanchez.clib.CLib
 import me.cirosanchez.clib.extension.colorize
 import me.cirosanchez.clib.extension.send
 import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFile
@@ -18,7 +19,7 @@ import revxrsal.commands.annotation.Optional
 import revxrsal.commands.annotation.Subcommand
 import revxrsal.commands.bukkit.annotation.CommandPermission
 
-@Command("team", "t")
+@Command("faction", "f")
 @CommandPermission("factions.command.team")
 @Description("Commands to manage teams")
 class TeamCommand {
@@ -26,7 +27,11 @@ class TeamCommand {
 
     @DefaultFor("~")
     fun default(actor: Player){
-        actor.sendColorizedMessageFromMessagesFile("team.default")
+        val keys = CLib.get().messagesFile.getConfigurationSection("team.default")!!.getKeys(false)
+
+        for (key in keys){
+            actor.sendColorizedMessageFromMessagesFile("team.default.$key")
+        }
     }
 
     @Subcommand("info", "i", "who", "w")
@@ -47,7 +52,7 @@ class TeamCommand {
         team = plugin.teamManager.getTeam(name)
 
         if (team == null){
-            actor.sendColorizedMessageFromMessagesFile("team.info.no-team", Placeholder("{name}", name))
+            actor.sendColorizedMessageFromMessagesFile("team.no-team", Placeholder("{name}", name))
             return
         }
 
@@ -145,12 +150,12 @@ class TeamCommand {
         val team = actor.getTeam()
 
         if (team == null){
-            actor.sendColorizedMessageFromMessagesFile("team.disband.no-team")
+            actor.sendColorizedMessageFromMessagesFile("team.not-in-a-team")
             return
         }
 
         if (!team.isLeader(actor)){
-            actor.sendColorizedMessageFromMessagesFile("team.disband.not-leader")
+            actor.sendColorizedMessageFromMessagesFile("team.not-leader")
             return
         }
 
@@ -165,12 +170,12 @@ class TeamCommand {
         val team = actor.getTeam()
 
         if (team == null){
-            actor.sendColorizedMessageFromMessagesFile("team.invite.not-in-a-team")
+            actor.sendColorizedMessageFromMessagesFile("team.not-in-a-team")
             return
         }
 
         if (team.isMember(actor)){
-            actor.sendColorizedMessageFromMessagesFile("team.invite.not-captain")
+            actor.sendColorizedMessageFromMessagesFile("team.not-captain")
             return
         }
 
@@ -199,6 +204,107 @@ class TeamCommand {
     }
 
     @Subcommand("disinvite")
+    @CommandPermission("factions.command.team.disinvite")
+    fun disinvite(actor: Player, name: String){
+        val team = actor.getTeam()
+
+        if (team == null){
+            actor.sendColorizedMessageFromMessagesFile("team.not-in-a-team")
+            return
+        }
+
+        if (team.isMember(actor)){
+            actor.sendColorizedMessageFromMessagesFile("team.not-captain")
+            return
+        }
+
+        val player = resolvePlayerName(name)
+
+        if (player == null) return
+
+        if (!team.isInvited(player)){
+            actor.sendColorizedMessageFromMessagesFile("team.disinvite.not-invited", Placeholder("{name}", player.name!!))
+            return
+        }
+
+        team.disinvite(player)
+        actor.sendColorizedMessageFromMessagesFile("team.disinvite.disinvited", Placeholder("{name}", player.name!!))
+
+        if (player.isOnline){
+            player.player!!.sendColorizedMessageFromMessagesFile("team.disinvite.send-to-online-player", Placeholder("{player}", actor.name), Placeholder("{team}", team.name))
+        }
+
+        for (member in team.getOnlineMembers()){
+            if (member != actor){
+                member.sendColorizedMessageFromMessagesFile("team.disinvite.send-to-online-team", Placeholder("{name}", actor.name), Placeholder("{team}", team.name),
+                    Placeholder("{player}", player.name!!))
+            }
+        }
+    }
+
+    @Subcommand("kick")
+    @CommandPermission("factions.command.team.kick")
+    fun kick(actor: Player, name: String){
+        val team = actor.getTeam()
+
+        if (team == null){
+            actor.sendColorizedMessageFromMessagesFile("team.not-in-a-team")
+            return
+        }
+
+        if (!team.isCaptain(actor)){
+            actor.sendColorizedMessageFromMessagesFile("team.not-captain")
+            return
+        }
+
+        val player = resolvePlayerName(name)
+
+        if (player == null) return
+
+        if (!team.playerIsInTeam(player)){
+            actor.sendColorizedMessageFromMessagesFile("team.kick.not-in-team", Placeholder("{name}", player.name!!))
+            return
+        }
+
+        team.kick(player)
+        actor.sendColorizedMessageFromMessagesFile("team.kick.kicked", Placeholder("{name}", player.name!!))
+
+        if (player.isOnline){
+            player.player!!.sendColorizedMessageFromMessagesFile("team.kick.send-to-online-player", Placeholder("{team}", team.name))
+        }
+
+        for (member in team.getOnlineMembers()){
+            if (member != actor){
+                member.sendColorizedMessageFromMessagesFile("team.kick.send-to-online-team", Placeholder("{name}", actor.name), Placeholder("{team}", team.name),
+                    Placeholder("{player}", player.name!!))
+            }
+        }
+    }
+
+    @Subcommand("promote")
+    @CommandPermission("factions.command.team.promote")
+    fun promote(actor: Player, name: String){
+        val team = actor.getTeam()
+
+        if (team == null){
+            actor.sendColorizedMessageFromMessagesFile("team.not-in-a-team")
+            return
+        }
+
+        if (!team.isLeader(actor)){
+            actor.sendColorizedMessageFromMessagesFile("team.promote.not-leader")
+            return
+        }
+
+        val player = resolvePlayerName(name)
+
+        if (player == null || !player.hasPlayedBefore()) return
+
+        if (!team.isMember(player)){
+            actor.sendColorizedMessageFromMessagesFile("team.promote.not-a-member", Placeholder("{player}", player.name!!))
+            return
+        }
+    }
 
 
 

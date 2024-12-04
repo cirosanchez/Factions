@@ -8,11 +8,13 @@ import me.cirosanchez.clib.adapter.impl.WorldAdapter
 import me.cirosanchez.clib.cLib
 import me.cirosanchez.clib.exception.InvalidConfigurationException
 import me.cirosanchez.factions.command.SpawnCommand
+import me.cirosanchez.factions.command.TeamCommand
 import me.cirosanchez.factions.listener.PlayerListener
 import me.cirosanchez.factions.model.configuration.ConfigurationManager
 import me.cirosanchez.factions.model.region.RegionManager
 import me.cirosanchez.factions.model.spawn.SpawnManager
 import me.cirosanchez.factions.model.storage.StorageManager
+import me.cirosanchez.factions.model.team.Team
 import me.cirosanchez.factions.model.team.TeamManager
 import me.cirosanchez.factions.model.user.UserManager
 import me.cirosanchez.factions.model.world.WorldManager
@@ -46,7 +48,7 @@ class Factions : JavaPlugin() {
         loadAllManagers()
         commandHandler = BukkitCommandHandler.create(this)
         commandHandler.register(SpawnCommand())
-
+        commandHandler.register(TeamCommand())
         // Listeners
         server.pluginManager.registerEvents(PlayerListener(), this)
     }
