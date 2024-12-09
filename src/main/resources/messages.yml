@@ -59,4 +59,13 @@ team:
     send-to-online-team: "<blue>{name}</blue> has kicked <green>{player}</green> from the team."
   promote:
     not-leader: "<red>You must be the leader to promote a member.</red>"
-    not-a-member: "<red>{player} is not a member of the team.</red>"
+    not-part-of-the-team: "<red>{player} is not a member of the team.</red>"
+    cant-promote: "<red>{player} is already a coleader.</red>"
+  demote:
+    not-leader: "<red>You must be the leader to promote a member.</red>"
+    not-part-of-the-team: "<red>{player} is not a member of the team.</red>"
+    cant-demote: "<red>{player} is already a member.</red>"
+  open:
+    open: "<blue>{team}</blue><white> is open now, join using <green>/t join {team}</green></white>."
+    close: "<blue>{team}</blue><white>is closed now.</white>"
+

@@ -300,9 +300,105 @@ class TeamCommand {
 
         if (player == null || !player.hasPlayedBefore()) return
 
-        if (!team.isMember(player)){
-            actor.sendColorizedMessageFromMessagesFile("team.promote.not-a-member", Placeholder("{player}", player.name!!))
+        if (!team.playerIsInTeam(player)){
+            actor.sendColorizedMessageFromMessagesFile("team.promote.not-part-of-the-team", Placeholder("{player}", player.name!!))
             return
+        }
+
+        if (team.isCoLeader(player)){
+            actor.sendColorizedMessageFromMessagesFile("team.promote.cant-promote", Placeholder("{player}", player.name!!))
+
+        }
+
+        team.promote(player)
+    }
+
+    @Subcommand("demote")
+    @CommandPermission("factions.command.team.demote")
+    fun demote(actor: Player, name: String){
+        val team = actor.getTeam()
+
+        if (team == null){
+            actor.sendColorizedMessageFromMessagesFile("team.not-in-a-team")
+            return
+        }
+
+        if (!team.isLeader(actor)){
+            actor.sendColorizedMessageFromMessagesFile("team.not-leader")
+            return
+        }
+
+        val player = resolvePlayerName(name)
+
+        if (player == null || !player.hasPlayedBefore()) return
+
+        if (!team.playerIsInTeam(player)){
+            actor.sendColorizedMessageFromMessagesFile("team.promote.not-part-of-the-team", Placeholder("{player}", player.name!!))
+            return
+        }
+
+        if (team.isMember(player)){
+            actor.sendColorizedMessageFromMessagesFile("team.demote.cant-demote", Placeholder("{player}", player.name!!))
+            return
+        }
+
+        team.demote(player)
+    }
+
+    @Subcommand("vault")
+    @CommandPermission("factions.command.team.demote")
+    fun vault(actor: Player){
+        val team = actor.getTeam()
+
+        if (team == null){
+            actor.sendColorizedMessageFromMessagesFile("team.not-in-a-team")
+            return
+        }
+
+        if (!team.isCaptain(actor)){
+            actor.sendColorizedMessageFromMessagesFile("team.not-captain")
+            return
+        }
+
+        actor.openInventory(team.vault)
+    }
+
+    @Subcommand("open")
+    @CommandPermission("factions.command.team.open")
+    fun open(actor: Player){
+        val team = actor.getTeam()
+
+        if (team == null){
+            actor.sendColorizedMessageFromMessagesFile("team.not-in-a-team")
+            return
+        }
+
+        team.isOpen = !team.isOpen
+
+        if (team.isOpen){
+            broadcastFromConfiguration("team.open.open", Placeholder("{team}", team.name))
+        } else {
+            broadcastFromConfiguration("team.open.close", Placeholder("{team}", team.name))
+        }
+    }
+
+    @Subcommand("join")
+    @CommandPermission("factions.command.team.join")
+    fun join(actor: Player, name: String){
+         val player = resolvePlayerName(name)
+
+        if (player == null || !player.hasPlayedBefore()) {
+            val team = plugin.teamManager.getTeam(name)
+
+            if (team == null) return
+        }
+
+        val team = player!!.getTeam()
+
+        if (team == null) return
+
+        if (team.isInvited(player)){
+
         }
     }
 

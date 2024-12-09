@@ -65,7 +65,8 @@ class TeamManager : Manager {
 
         val team = Team(name, leader.uniqueId, mutableSetOf(), mutableSetOf(), mutableSetOf(), 0, 0, 0, null, null, Bukkit.createInventory(null,
             InventoryType.CHEST),
-            mutableSetOf()
+            mutableSetOf(),
+            false
         )
 
         this.teams.put(name, team)

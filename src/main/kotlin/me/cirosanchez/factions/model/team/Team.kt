@@ -22,7 +22,8 @@ data class Team(@Id var name: String,
                 var claim: Region?,
                 var home: Location?,
                 var vault: Inventory,
-                var invites: MutableSet<UUID>
+                var invites: MutableSet<UUID>,
+                var isOpen: Boolean
                 ) : MongoSerializable {
 
     fun getLeader(): OfflinePlayer {
@@ -109,7 +110,39 @@ data class Team(@Id var name: String,
         }
     }
 
+    fun promote(player: OfflinePlayer){
+        if (isLeader(player) || isCoLeader(player)){
+            return
+        }
+
+        if (isCaptain(player)){
+            this.captains.remove(player.uniqueId)
+            this.coleaders.add(player.uniqueId)
+        }
+
+        if (isMember(player)){
+            this.members.remove(player.uniqueId)
+            this.captains.remove(player.uniqueId)
+        }
+    }
+
     fun demote(player: Player){
+        if (isMember(player) || isLeader(player)){
+            return
+        }
+
+        if (isCoLeader(player)){
+            this.coleaders.remove(player.uniqueId)
+            this.captains.add(player.uniqueId)
+        }
+
+        if (isCaptain(player)){
+            this.captains.remove(player.uniqueId)
+            this.members.add(player.uniqueId)
+        }
+    }
+
+    fun demote(player: OfflinePlayer){
         if (isMember(player) || isLeader(player)){
             return
         }
@@ -173,6 +206,10 @@ data class Team(@Id var name: String,
         if (isMember(offlinePlayer)){
             members.remove(offlinePlayer.uniqueId)
         }
+    }
+
+    fun isPartOfTheTeam(){
+
     }
 
 }
