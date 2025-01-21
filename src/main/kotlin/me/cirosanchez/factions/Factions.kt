@@ -7,11 +7,14 @@ import me.cirosanchez.clib.adapter.impl.LocationAdapter
 import me.cirosanchez.clib.adapter.impl.WorldAdapter
 import me.cirosanchez.clib.cLib
 import me.cirosanchez.clib.exception.InvalidConfigurationException
+import me.cirosanchez.factions.command.MineCommand
 import me.cirosanchez.factions.command.SpawnCommand
 import me.cirosanchez.factions.command.TeamCommand
 import me.cirosanchez.factions.listener.PlayerListener
 import me.cirosanchez.factions.model.configuration.ConfigurationManager
+import me.cirosanchez.factions.model.mine.MineManager
 import me.cirosanchez.factions.model.region.RegionManager
+import me.cirosanchez.factions.model.scoreboard.ScoreboardManager
 import me.cirosanchez.factions.model.spawn.SpawnManager
 import me.cirosanchez.factions.model.storage.StorageManager
 import me.cirosanchez.factions.model.team.Team
@@ -40,6 +43,8 @@ class Factions : JavaPlugin() {
     val spawnManager: SpawnManager = SpawnManager()
     val userManager: UserManager = UserManager()
     val teamManager: TeamManager = TeamManager()
+    val mineManager: MineManager = MineManager()
+    val scoreboardManager = ScoreboardManager()
     lateinit var commandHandler: BukkitCommandHandler
 
     override fun onEnable() {
@@ -47,8 +52,10 @@ class Factions : JavaPlugin() {
         // Initializing
         loadAllManagers()
         commandHandler = BukkitCommandHandler.create(this)
+        commandHandler.registerBrigadier()
         commandHandler.register(SpawnCommand())
         commandHandler.register(TeamCommand())
+        commandHandler.register(MineCommand())
         // Listeners
         server.pluginManager.registerEvents(PlayerListener(), this)
     }
@@ -95,6 +102,8 @@ class Factions : JavaPlugin() {
         spawnManager.load()
         userManager.load()
         teamManager.load()
+        mineManager.load()
+        scoreboardManager.load()
     }
 
 }

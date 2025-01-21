@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     kotlin("jvm") version "2.0.21"
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -20,9 +22,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
-    implementation("com.github.cirosanchez:cLib:-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    implementation("com.github.cirosanchez:cLib:v0.3.0")
     implementation("org.mongodb:bson:4.3.4")
+    implementation("fr.mrmicky:fastboard:2.1.3")
 
 
     val targetJavaVersion = 21
@@ -44,8 +47,28 @@ dependencies {
     }
 
     tasks {
+
+        clean {
+            doFirst {
+                val file = file("run/plugins/Factions/messages.yml")
+
+                if (file.exists()){
+                    file.delete()
+                    println("messages.yml deleted")
+                }
+            }
+        }
         runServer {
             minecraftVersion("1.21.1")
         }
+    }
+}
+tasks.withType<JavaCompile> { // Preserve parameter names in the bytecode
+    options.compilerArgs.add("-parameters")
+}
+
+tasks.withType<KotlinJvmCompile> { // optional: if you're using Kotlin
+    compilerOptions {
+        javaParameters = true
     }
 }

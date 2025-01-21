@@ -1,7 +1,9 @@
 package me.cirosanchez.factions.model.team
 
+import me.cirosanchez.clib.getPlugin
 import me.cirosanchez.clib.storage.Id
 import me.cirosanchez.clib.storage.MongoSerializable
+import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.model.region.Region
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -102,11 +104,13 @@ data class Team(@Id var name: String,
         if (isCaptain(player)){
             this.captains.remove(player.uniqueId)
             this.coleaders.add(player.uniqueId)
+            return
         }
 
         if (isMember(player)){
             this.members.remove(player.uniqueId)
             this.captains.remove(player.uniqueId)
+            return
         }
     }
 
@@ -118,11 +122,13 @@ data class Team(@Id var name: String,
         if (isCaptain(player)){
             this.captains.remove(player.uniqueId)
             this.coleaders.add(player.uniqueId)
+            return
         }
 
         if (isMember(player)){
             this.members.remove(player.uniqueId)
-            this.captains.remove(player.uniqueId)
+            this.captains.add(player.uniqueId)
+            return
         }
     }
 
@@ -134,11 +140,13 @@ data class Team(@Id var name: String,
         if (isCoLeader(player)){
             this.coleaders.remove(player.uniqueId)
             this.captains.add(player.uniqueId)
+            return
         }
 
         if (isCaptain(player)){
             this.captains.remove(player.uniqueId)
             this.members.add(player.uniqueId)
+            return
         }
     }
 
@@ -150,11 +158,13 @@ data class Team(@Id var name: String,
         if (isCoLeader(player)){
             this.coleaders.remove(player.uniqueId)
             this.captains.add(player.uniqueId)
+            return
         }
 
         if (isCaptain(player)){
             this.captains.remove(player.uniqueId)
             this.members.add(player.uniqueId)
+            return
         }
     }
 
@@ -208,8 +218,12 @@ data class Team(@Id var name: String,
         }
     }
 
-    fun isPartOfTheTeam(){
-
+    fun isFull(): Boolean {
+        return Factions.get().configurationManager.config.getInt("team.size") >= getAbsoluteMembers().size
     }
 
+
+    fun join(player: Player){
+        this.members.add(player.uniqueId)
+    }
 }

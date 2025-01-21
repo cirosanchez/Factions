@@ -20,3 +20,6 @@ spawn:
   time-to-tp: 3
   # Radius that player can move around without cancelling spawn
   radius: 5
+
+team:
+  size: 20

@@ -1,3 +1,6 @@
+player-doesnt-exist: "<red>Player {name} doesn't exist.</red>"
+region-change: "<yellow>Entering: {to-region}, Leaving: {from-region}</yellow>"
+
 spawn:
   teleporting: "<green>Teleporting you to spawn in {seconds}s.</green>"
   teleported: "<green>Teleported you to spawn!</green>"
@@ -11,11 +14,13 @@ spawn:
   claimed: "<green>Claimed between {pos1} and {pos2}</green>"
   positions-missing: "<red>Set all the positions to finish claiming process</red>"
 
+
 team:
   not-in-a-team: "<red>You must be in a team to use this command.</red>"
   not-leader: "<red>You must be the leader to use this command.</red>"
   not-captain: "<red>You must be a captain to use this command.</red>"
   not-coleader: "<red>You must be a co-leader to use this command.</red>"
+  name-not-valid: "<red>Name must be 3 to 16 characters long and alphanumeric! (ABC123)</red>"
   default:
     1: "<blue>Team Commands</blue>"
     2: "<gray><st>---------------------------------------------------</st></gray>"
@@ -34,9 +39,11 @@ team:
     15: "<blue>/t leave </blue>: Leave your current team."
     16: "<gray><st>---------------------------------------------------</st></gray>"
   info:
-    no-team: "<red>There's no team with player or named {name}.</red>"
+    no-team: "<red>There's no team named {name}.</red>"
+    no-team-with-player: "<red>There's no team with player named {name}.</red>"
   create:
     already-in-team: "<red>You're already in a team!</red>"
+    already-exists: "<red>A team with that name already exists!</red>"
     created: "You've created team: <green>{name}</green>."
     broadcast: "<blue>{player}</blue> has created <green>{name}</green>."
   delete:
@@ -61,11 +68,69 @@ team:
     not-leader: "<red>You must be the leader to promote a member.</red>"
     not-part-of-the-team: "<red>{player} is not a member of the team.</red>"
     cant-promote: "<red>{player} is already a coleader.</red>"
+    promoted: "<green>{player}</green> has been promoted."
+    promoted-to-player: "<green>You've been promoted!</green>"
   demote:
     not-leader: "<red>You must be the leader to promote a member.</red>"
     not-part-of-the-team: "<red>{player} is not a member of the team.</red>"
     cant-demote: "<red>{player} is already a member.</red>"
+    demoted: "<red>{player}</red> has been demoted."
+    demoted-to-player: "<red>You've been demoted!</red>"
   open:
     open: "<blue>{team}</blue><white> is open now, join using <green>/t join {team}</green></white>."
     close: "<blue>{team}</blue><white>is closed now.</white>"
+  disband:
+    disbanded: "<green>Team has been disbanded.</green>"
+    broadcast: "Team <blue>{name}</blue> has been disbanded by <green>{player}</green>"
+  join:
+    no-player-or-team: "<red>There's no team or player by the name of: {name}</red>"
+    player-has-no-team: "<red>Player {name} doesn't have a team!</red>"
+    team-full: "<red>Team {team} is full.</red>"
+    not-invited: "<red>You're not invited to {team}</red>."
+    joined: "You've joined <green>{team}</green>"
+  leave:
+    left: "Left the team <red>{team}</red>"
+  vault:
+    open: "Opening the vault..."
+  rename:
+    same-name: "The new name is the same as before!"
+    set: "Changed team's name to: <green>{name}</green>"
+
+
+mine:
+  pos: "<green>Set position {number} to: {location}</green>"
+  claimed: "<green>Claimed between {pos1} and {pos2} for mine {mine}</green>"
+  mine-doesnt-exist: "<red>Mine with name <white>{name}</white> doesn't exist.</red>"
+  positions-missing: "<red>Set all the positions to finish claiming process.</red>"
+  default:
+    1: "<red>Mine Commands</red>"
+    2: "<gray><st>---------------------------------------------------</st></gray>"
+    3: "<red>/mine create <name></red>: Create a new mine."
+    4: "<red>/mine info <name></red>: See a mine's info."
+    5: "<red>/mine delete <name></red>: Delete a mine."
+    6: "<red>/mine rename <name></red>: Rename a mine."
+    7: "<red>/mine setBlock <name></red>: Set your current item in hand to the mine's block."
+    8: "<red>/mine setReward <name></red>: Set your item in hand to the mine's reward."
+    9: "<red>/mine setRegion <name></red>: Claim your mine's region."
+    10: "<red>/mine setCuboid <name> </red>: Set the area where the blocks will spawn."
+    11: "<red>/mine setDisplayName <name> <display name></red>: Change the mine's display name."
+    12: "<red>/mine setRegenTime <name> <time> </red>: Change the mine's regeneration time."
+    13: "<red>/mine list </red>: List all mines."
+    14: "<red>/mine reset <name>: </red> Reset the mine."
+    15: "<gray><st>---------------------------------------------------</st></gray>"
+  create:
+    mine-exists: "<red>This mine already exists!</red>"
+    created: "Mine created with name: <green>{name}</green>"
+  delete:
+    deleted: "Mine with name <green>{name}</green> was deleted."
+  setBlock:
+    not-block: "<red>The item you have in your hand is not a block!</red>"
+    set: "Set new block to {item}"
+  regenTime:
+    set: "Set new regeneration time to {time}"
+  setRewards:
+    not-item: "<red>The item you have in your hand is not a item!</red>"
+    set: "Set new reward to {item}"
+
+
 

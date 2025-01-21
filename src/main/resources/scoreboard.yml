@@ -1,0 +1,27 @@
+refresh: 10
+
+title:
+  lines:
+    - "<b><aqua><white>F</white>LUORITE"
+    - "<b><aqua>F<white>L</white>UORITE"
+    - "<b><aqua>FL<white>U</white>ORITE"
+    - "<b><aqua>FLU<white>O</white>RITE"
+    - "<b><aqua>FLUO<white>R</white>ITE"
+    - "<b><aqua>FLUOR<white>I</white>TE"
+    - "<b><aqua>FLUORI<white>T</white>E"
+    - "<b><aqua>FLUORIT<white>E</white>"
+    - "<b><white>FLUORITE</white></b>"
+    - "<b><aqua>FLUORITE</aqua></b>"
+    - "<b><white>FLUORITE</white></b>"
+    - "<b><aqua>FLUORITE</aqua></b>"
+    - "<b><white>FLUORITE</white></b>"
+    - "<b><aqua>FLUORITE</aqua></b>"
+    - "<b><white>FLUORITE</white></b>"
+
+content:
+  - "<gray>»</gray> <white>ɪɢɴ:</white> <green>%player_name%</green>"
+  - "<gray>»</gray> <white>ʀᴀɴᴋ:</white> <green>%phoenix_player_rank%</green>"
+  - ""
+  - "<gray>»</gray> <white>ᴍᴏɴᴇʏ:</white> <green>%fluoritesmp_money%</green>"
+  - "<gray>»</gray> <white>ꜰᴀᴄᴛɪᴏɴ:</white> <green>%fluoritesmp_faction%</green>"
+  - "<gray>»</gray> <white>ᴘᴏᴡᴇʀ:</white> <green>%fluoritesmp_power%</green>"

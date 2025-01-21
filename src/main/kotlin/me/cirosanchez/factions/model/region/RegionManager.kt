@@ -29,9 +29,11 @@ class RegionManager {
         regions.put(worldsManager.endWorld, mutableSetOf())
         regions.put(worldsManager.eventsWorld, mutableSetOf())
 
-        val regions = plugin.storageManager.readObjects(Region::class)
-        for (region in regions){
-            println(region.name )
+        val regionsFromDb = plugin.storageManager.readObjects(Region::class)
+
+        regionsFromDb.forEach {
+            // TODO MAKE SAFE CALLS!!! FIX NULLABILITY
+            regions.get(it.cuboid!!.world)!!.add(it)
         }
     }
 

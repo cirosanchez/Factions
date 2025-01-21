@@ -2,8 +2,10 @@ package me.cirosanchez.factions.listener
 
 import me.cirosanchez.clib.cuboid.Cuboid
 import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFile
+import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFileList
 import me.cirosanchez.clib.placeholder.Placeholder
 import me.cirosanchez.factions.Factions
+import me.cirosanchez.factions.model.mine.Mine
 import me.cirosanchez.factions.model.region.Region
 import me.cirosanchez.factions.model.region.RegionType
 import me.cirosanchez.factions.model.region.util.PlayerRegionChangeEvent
@@ -38,14 +40,11 @@ class PlayerListener : Listener {
 
     companion object {
         val wandPlayers: HashMap<Player, WandSession> = hashMapOf()
-
+        val cuboidPlayers: HashMap<Player, Mine> = hashMapOf()
+        val claimPlayers: HashMap<Player, Mine> = hashMapOf()
     }
 
-    @EventHandler
-    fun changeRegion(e: PlayerMoveEvent){
-        val fromRegion = regionManager.getRegion(e.from)
-        val toRegion = regionManager.getRegions(e.to)
-    }
+
 
     @EventHandler
     fun spawnMove(e: PlayerMoveEvent){
@@ -92,12 +91,11 @@ class PlayerListener : Listener {
         val meta = item.itemMeta
         val pdc = meta.persistentDataContainer
 
-        if (!pdc.has(NamespacedKey(Factions.get(), "SPAWN-WAND"), PersistentDataType.STRING)) return
+        if (!pdc.has(NamespacedKey(Factions.get(), "WAND"), PersistentDataType.STRING) || !pdc.has(NamespacedKey(Factions.get(), "WAND"), PersistentDataType.STRING) ) return
         e.isCancelled = true
 
         val action = e.action
         val block = e.clickedBlock
-
         when (session.type) {
             WandType.SPAWN -> {
 
@@ -117,13 +115,19 @@ class PlayerListener : Listener {
                             p.sendColorizedMessageFromMessagesFile("spawn.positions-missing", EmptyPlaceholder.E)
                             return
                         }
-                        val cuboid = Cuboid(session.pos1, session.pos2)
+
+                        if (!regionManager.getRegions(RegionType.SPAWN).isEmpty()) {
+                            regionManager.regions.get(session.pos1!!.world)!!.clear()
+                            return
+                        }
+
+                        val cuboid = Cuboid(session.pos1!!.add(0.0, -300.0, 0.0), session.pos2!!.add(0.0, 300.0, 0.0))
                         val region = Region(Factions.get().configurationManager.config.getString("spawn.name") ?: "<green>Spawn</green>", cuboid, false, RegionType.SPAWN, UUID.randomUUID())
 
                         regionManager.addRegion(region)
                         p.sendColorizedMessageFromMessagesFile("spawn.claimed", Placeholder("{pos1}", session.pos1!!.toPrettyStringWithoutWorld()),
                             Placeholder("{pos2}", session.pos2!!.toPrettyStringWithoutWorld()))
-                        p.itemInHand.type = Material.AIR
+                        p.inventory.itemInMainHand.amount = 0
                         wandPlayers.remove(p)
                     }
 
@@ -132,6 +136,78 @@ class PlayerListener : Listener {
 
             }
             WandType.TEAM -> TODO()
+            WandType.MINE_CLAIM -> {
+                when (action) {
+                    Action.LEFT_CLICK_BLOCK -> {
+                        session.pos1 = block!!.location
+                        p.sendColorizedMessageFromMessagesFile("mine.pos", Placeholder("{location}", block.location.toPrettyStringWithoutWorld()),
+                            Placeholder("{number}","1"))
+                    }
+                    Action.RIGHT_CLICK_BLOCK -> {
+                        session.pos2 = block!!.location
+                        p.sendColorizedMessageFromMessagesFile("mine.pos", Placeholder("{location}", block.location.toPrettyStringWithoutWorld()),
+                            Placeholder("{number}","2"))
+                    }
+                    Action.LEFT_CLICK_AIR -> {
+                        if (!session.isCompleted()){
+                            p.sendColorizedMessageFromMessagesFile("mine.positions-missing", EmptyPlaceholder.E)
+                            return
+                        }
+
+                        val mine = claimPlayers.get(p) ?: return
+
+
+                        val cuboid = Cuboid(session.pos1!!.add(0.0, -300.0, 0.0), session.pos2!!.add(0.0, 300.0, 0.0))
+                        val region = Region(mine.displayName, cuboid, true, RegionType.MINE, UUID.randomUUID())
+
+                        regionManager.addRegion(region)
+                        p.sendColorizedMessageFromMessagesFile("mine.claimed", Placeholder("{pos1}", session.pos1!!.toPrettyStringWithoutWorld()),
+                            Placeholder("{pos2}", session.pos2!!.toPrettyStringWithoutWorld()), Placeholder("{mine}", mine.name))
+                        p.inventory.itemInMainHand.amount = 0
+                        wandPlayers.remove(p)
+                        claimPlayers.remove(p)
+                    }
+
+                    else -> {return}
+                }
+            }
+            WandType.MINE_CUBOID -> {
+                when (action) {
+                    Action.LEFT_CLICK_BLOCK -> {
+                        session.pos1 = block!!.location
+                        p.sendColorizedMessageFromMessagesFile("mine.pos", Placeholder("{location}", block.location.toPrettyStringWithoutWorld()),
+                            Placeholder("{number}","1"))
+                    }
+                    Action.RIGHT_CLICK_BLOCK -> {
+                        session.pos2 = block!!.location
+                        p.sendColorizedMessageFromMessagesFile("mine.pos", Placeholder("{location}", block.location.toPrettyStringWithoutWorld()),
+                            Placeholder("{number}","2"), )
+                    }
+                    Action.LEFT_CLICK_AIR -> {
+                        if (!session.isCompleted()){
+                            p.sendColorizedMessageFromMessagesFile("mine.positions-missing", EmptyPlaceholder.E)
+                            return
+                        }
+
+                        val mine = cuboidPlayers.get(p) ?: return
+
+
+                        val cuboid = Cuboid(session.pos1!!, session.pos2!!)
+                        mine.cuboid = cuboid
+
+
+                        p.sendColorizedMessageFromMessagesFile("mine.claimed", Placeholder("{pos1}", session.pos1!!.toPrettyStringWithoutWorld()),
+                            Placeholder("{pos2}", session.pos2!!.toPrettyStringWithoutWorld()), Placeholder("{mine}", mine.name))
+
+                        p.inventory.itemInMainHand.amount = 0
+
+                        wandPlayers.remove(p)
+                        cuboidPlayers.remove(p)
+                    }
+
+                    else -> {return}
+                }
+            }
         }
     }
 
@@ -144,8 +220,11 @@ class PlayerListener : Listener {
         val from = event.from
         val to = event.to
         val player = event.player
-
-        player.sendMessage("${from.name} >>> ${to.name}")
+        println(player)
+        println(from)
+        println(to)
+        player.sendColorizedMessageFromMessagesFile("region-change", Placeholder("{to-region}", to.name),
+            Placeholder("{from-region}", from.name))
     }
 
     /*

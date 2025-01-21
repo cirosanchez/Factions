@@ -48,7 +48,7 @@ class SpawnCommand {
         meta.addEnchant(Enchantment.LURE, 10, false)
 
         val pdc = meta.persistentDataContainer
-        pdc.set(NamespacedKey(Factions.get(), "SPAWN-WAND"), PersistentDataType.STRING, "YAY")
+        pdc.set(NamespacedKey(Factions.get(), "WAND"), PersistentDataType.STRING, "YAY")
 
         item.itemMeta = meta
     }
