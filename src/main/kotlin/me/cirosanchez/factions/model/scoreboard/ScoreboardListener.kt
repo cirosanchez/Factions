@@ -11,7 +11,7 @@ class ScoreboardListener(val scoreboardManager: ScoreboardManager) : Listener {
     @EventHandler
     fun join(e: PlayerJoinEvent){
         scoreboardManager.register(e.player)
-        println("register")
+
     }
 
 

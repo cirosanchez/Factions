@@ -220,9 +220,7 @@ class PlayerListener : Listener {
         val from = event.from
         val to = event.to
         val player = event.player
-        println(player)
-        println(from)
-        println(to)
+
         player.sendColorizedMessageFromMessagesFile("region-change", Placeholder("{to-region}", to.name),
             Placeholder("{from-region}", from.name))
     }

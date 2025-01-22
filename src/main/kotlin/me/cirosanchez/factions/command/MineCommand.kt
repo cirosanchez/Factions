@@ -139,9 +139,15 @@ class MineCommand {
     @Subcommand("list")
     @CommandPermission("factions.commands.mine.list")
     fun list(actor: Player) {
-        mm.mines.values.forEach {
-            actor.send("${it.displayName} Mine")
+        actor.send("<gray><st>---------------------------------------------------</st></gray>")
+        if (mm.mines.values.isEmpty()){
+            actor.send("No mines created yet...")
+        } else {
+            mm.mines.values.forEach {
+                actor.send("${it.displayName} Mine")
+            }
         }
+        actor.send("<gray><st>---------------------------------------------------</st></gray>")
     }
 
     @Subcommand("setDisplayName")

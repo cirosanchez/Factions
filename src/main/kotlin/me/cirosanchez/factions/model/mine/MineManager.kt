@@ -3,6 +3,7 @@ package me.cirosanchez.factions.model.mine
 import me.cirosanchez.clib.getPlugin
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.model.Manager
+import me.cirosanchez.factions.model.region.Region
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.scheduler.BukkitTask
@@ -45,6 +46,8 @@ class MineManager : Manager {
 
             runnables.put(mine, task)
         }
+
+        plugin.server.pluginManager.registerEvents(MineListener(plugin), plugin)
     }
 
     override fun unload() {
@@ -85,9 +88,20 @@ class MineManager : Manager {
 
     fun getMine(loc: Location): Mine? {
         mines.values.forEach {
-            if (it.cuboid == null) return@forEach
+            if (it.claim == null || it.claim!!.cuboid == null) return@forEach
 
-            if (it.cuboid!!.contains(loc)) {
+            if (it.claim!!.cuboid!!.contains(loc)) {
+                return it
+            }
+        }
+        return null
+    }
+
+    fun getMine(region: Region): Mine? {
+        mines.values.forEach {
+            if (it.claim == null) return@forEach
+
+            if (it.claim == region) {
                 return it
             }
         }
@@ -132,6 +146,7 @@ class MineManager : Manager {
     fun mineExists(name: String): Boolean {
         return mines.contains(name)
     }
+
 
 
 }

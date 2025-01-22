@@ -49,18 +49,16 @@ class TeamCommand {
             team = actor.getTeam()
 
             if (team == null){
-                println("asd")
                 actor.sendColorizedMessageFromMessagesFile("team.not-in-a-team")
                 return
             }
 
-            println(team.name)
+
 
         } else if (plugin.teamManager.teams.contains(name)){
             team = plugin.teamManager.getTeam(name)
             if (team == null){
 
-                println("asd2")
                 actor.sendColorizedMessageFromMessagesFile("team.info.no-team",Placeholder("{name}", name) )
                 return
             }
@@ -68,7 +66,6 @@ class TeamCommand {
             val player = Bukkit.getOfflinePlayer(name)
 
             if (!player.hasPlayedBefore()){
-                println("asd3")
                 actor.sendColorizedMessageFromMessagesFile("player-doesnt-exist", Placeholder("{name}", name))
                 return
             }
@@ -76,7 +73,7 @@ class TeamCommand {
             team = plugin.teamManager.getTeam(player)
 
             if (team == null){
-                println("asd4")
+
                 actor.sendColorizedMessageFromMessagesFile("team.info.no-team-with-player",Placeholder("{name}", name) )
                 return
             }
@@ -84,7 +81,8 @@ class TeamCommand {
 
 
         if (team == null){
-            println("asd5")
+
+
             actor.sendColorizedMessageFromMessagesFile("team.no-team", Placeholder("{name}", name))
             return
         }

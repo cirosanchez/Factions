@@ -56,6 +56,13 @@ dependencies {
                     file.delete()
                     println("messages.yml deleted")
                 }
+
+                val anotherFile = file("run/plugins/Factions/config.yml")
+
+                if (anotherFile.exists()){
+                    anotherFile.delete()
+                    println("config.yml deleted")
+                }
             }
         }
         runServer {

@@ -2,7 +2,6 @@ package me.cirosanchez.factions.model.scoreboard
 
 
 import fr.mrmicky.fastboard.adventure.FastBoard
-import me.cirosanchez.clib.CLib.Companion.plugin
 import me.cirosanchez.clib.configuration.Configuration
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.model.Manager
@@ -11,8 +10,7 @@ import me.cirosanchez.factions.model.scoreboard.util.Title
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import revxrsal.commands.ktx.colorize
-
+import me.cirosanchez.clib.extension.colorize
 
 class ScoreboardManager : Manager {
     lateinit var plugin: Factions
@@ -60,7 +58,9 @@ class ScoreboardManager : Manager {
         }
 
         board.updateTitle(title.next())
-        board.updateLines(lines.get(player).map { Component.text(it.colorize()) })
+        val lines = lines.get(player)
+        val newLines = lines.map { it.colorize() }
+        board.updateLines(newLines)
     }
 
 

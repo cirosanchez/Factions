@@ -102,6 +102,7 @@ mine:
   claimed: "<green>Claimed between {pos1} and {pos2} for mine {mine}</green>"
   mine-doesnt-exist: "<red>Mine with name <white>{name}</white> doesn't exist.</red>"
   positions-missing: "<red>Set all the positions to finish claiming process.</red>"
+  no-permission-to-enter: "<red>You don't have enough permissions to enter this mine claim!</red>"
   default:
     1: "<red>Mine Commands</red>"
     2: "<gray><st>---------------------------------------------------</st></gray>"
