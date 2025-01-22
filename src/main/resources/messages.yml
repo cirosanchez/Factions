@@ -133,5 +133,9 @@ mine:
     not-item: "<red>The item you have in your hand is not a item!</red>"
     set: "Set new reward to {item}"
 
-
-
+region:
+  default:
+    1: "<cyan><b>Region Commands</cyan>"
+    2: "<gray><st>---------------------------------------------------</st></gray>"
+    3: "<cyan>/region map:</cyan> <white>Shows the corners of the claims near you.</white>"
+    4: "<gray><st>---------------------------------------------------</st></gray>"

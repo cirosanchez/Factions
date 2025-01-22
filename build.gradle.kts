@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm") version "2.0.21"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("io.github.surpsg.code-lines") version "0.0.1"
 }
 
 group = "me.cirosanchez"

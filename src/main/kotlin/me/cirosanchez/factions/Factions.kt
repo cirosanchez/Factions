@@ -17,7 +17,6 @@ import me.cirosanchez.factions.model.region.RegionManager
 import me.cirosanchez.factions.model.scoreboard.ScoreboardManager
 import me.cirosanchez.factions.model.spawn.SpawnManager
 import me.cirosanchez.factions.model.storage.StorageManager
-import me.cirosanchez.factions.model.team.Team
 import me.cirosanchez.factions.model.team.TeamManager
 import me.cirosanchez.factions.model.user.UserManager
 import me.cirosanchez.factions.model.world.WorldManager

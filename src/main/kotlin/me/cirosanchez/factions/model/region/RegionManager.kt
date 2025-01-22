@@ -118,4 +118,19 @@ class RegionManager {
         return fset
     }
 
+    fun getRegionsInRadius(location: Location): Set<Region> {
+        val regions = regions.values
+
+        val set = mutableSetOf<Region>()
+
+        regions.forEach {
+            var regionsNearby = it.filter { it.cuboid != null }.filter { location.distance(it.cuboid!!.center) < 200 }
+            regionsNearby.forEach {
+                set.add(it)
+            }
+        }
+
+        return set
+    }
+
 }
