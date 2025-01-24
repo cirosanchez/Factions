@@ -139,3 +139,7 @@ region:
     2: "<gray><st>---------------------------------------------------</st></gray>"
     3: "<cyan>/region map:</cyan> <white>Shows the corners of the claims near you.</white>"
     4: "<gray><st>---------------------------------------------------</st></gray>"
+
+map:
+  no-regions-nearby: "<red>No regions nearby near you.</red>"
+  found-region: "Region <green>{region}</green> is represented by <green>{material}</green>."

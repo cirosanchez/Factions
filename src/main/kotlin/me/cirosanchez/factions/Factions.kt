@@ -8,6 +8,7 @@ import me.cirosanchez.clib.adapter.impl.WorldAdapter
 import me.cirosanchez.clib.cLib
 import me.cirosanchez.clib.exception.InvalidConfigurationException
 import me.cirosanchez.factions.command.MineCommand
+import me.cirosanchez.factions.command.RegionCommand
 import me.cirosanchez.factions.command.SpawnCommand
 import me.cirosanchez.factions.command.TeamCommand
 import me.cirosanchez.factions.listener.PlayerListener
@@ -55,6 +56,7 @@ class Factions : JavaPlugin() {
         commandHandler.register(SpawnCommand())
         commandHandler.register(TeamCommand())
         commandHandler.register(MineCommand())
+        commandHandler.register(RegionCommand())
         // Listeners
         server.pluginManager.registerEvents(PlayerListener(), this)
     }

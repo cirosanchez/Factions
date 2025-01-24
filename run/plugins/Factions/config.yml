@@ -21,5 +21,7 @@ spawn:
   # Radius that player can move around without cancelling spawn
   radius: 5
 
+team-limit: 20
+
 team:
   size: 20
