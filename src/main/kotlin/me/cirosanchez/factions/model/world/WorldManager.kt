@@ -35,5 +35,9 @@ class WorldManager {
         netherWorld = Bukkit.getWorld(netherWorldName) ?: throw InvalidConfigurationException("$netherWorldName isn't a world. Please, create the world and restart the server.")
         endWorld = Bukkit.getWorld(endWorldName) ?: throw InvalidConfigurationException("$endWorldName isn't a world. Please, create the world and restart the server.")
         eventsWorld = Bukkit.getWorld(eventsWorldName) ?: throw InvalidConfigurationException("$eventsWorldName isn't a world. Please, create the world and restart the server.")
+
+        mainWorld.entities.forEach {
+            it.remove()
+        }
     }
 }

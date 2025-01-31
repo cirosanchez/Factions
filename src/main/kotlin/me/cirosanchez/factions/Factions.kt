@@ -59,6 +59,8 @@ class Factions : JavaPlugin() {
         commandHandler.register(RegionCommand())
         // Listeners
         server.pluginManager.registerEvents(PlayerListener(), this)
+
+
     }
 
     override fun onDisable() {

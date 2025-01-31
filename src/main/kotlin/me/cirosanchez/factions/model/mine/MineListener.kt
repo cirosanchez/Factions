@@ -15,9 +15,7 @@ class MineListener(val plugin: Factions) : Listener {
     @EventHandler
     fun regionChangeEvent(event: PlayerMoveEvent){
         val player = event.player
-        val to = event.to
-
-        println("asdasdasdasdsasd")
+        val to = event.to   
 
         val mine = plugin.mineManager.getMine(plugin.regionManager.getRegion(to) ?: return) ?: return
 
