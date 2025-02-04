@@ -7,6 +7,8 @@ import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFileList
 import me.cirosanchez.clib.placeholder.Placeholder
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.model.region.Region
+import me.cirosanchez.factions.model.region.RegionType
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.BlockDisplay
@@ -18,6 +20,8 @@ import revxrsal.commands.annotation.Description
 import revxrsal.commands.annotation.Subcommand
 import revxrsal.commands.bukkit.annotation.CommandPermission
 import kotlin.rem
+import kotlin.text.get
+import kotlin.text.set
 
 
 @Command("region")
@@ -25,18 +29,39 @@ import kotlin.rem
 @Description("Region related commands.")
 class RegionCommand {
 
-    val mapsEnabled: HashMap<Player, Set<BlockDisplay>> = hashMapOf()
+    companion object {
+        val mapsEnabled: HashMap<Player, Set<BlockDisplay>> = hashMapOf()
+    }
+
+    val plugin = Factions.get()
+    val worldManager = plugin.worldManager
+    val regionManager = plugin.regionManager
 
     @DefaultFor("~")
     fun def(actor: Player){
         actor.sendColorizedMessageFromMessagesFileList("region.default")
     }
 
+
     @Subcommand("info")
+    @CommandPermission("factions.command.region.info")
     fun info(actor: Player){
         actor.send("<gray><st>---------------------------------------------------</st></gray>")
-        actor.send("")
+        actor.send("World: ${worldManager.getWorldName(actor)}")
+        val region = regionManager.getRegion(actor)
+        if (region == null){
+            actor.send("Region: <gray>Not in a region</gray>")
+        } else {
+            actor.send("Region: ${region.name}")
+            if (region.type == RegionType.MINE){
+                actor.send("Mine: <green>✓</green>")
+            } else {
+                actor.send("Mine: <red>✗</red>")
+            }
+        }
+        actor.send("<gray><st>---------------------------------------------------</st></gray>")
     }
+
 
     @Subcommand("map")
     @CommandPermission("factions.command.region.map")
@@ -45,7 +70,7 @@ class RegionCommand {
 
         val relatedRegions: HashMap<Region, Material> = hashMapOf()
         if (regions.isEmpty()){
-            actor.sendColorizedMessageFromMessagesFile("map.no-regions-nearby")
+            actor.sendColorizedMessageFromMessagesFile("region.map.no-regions-nearby")
             return
         }
 
@@ -57,6 +82,7 @@ class RegionCommand {
             }
 
             actor.sendColorizedMessageFromMessagesFile("region.map.removed-map")
+            mapsEnabled.remove(actor)
             return
         }
 
@@ -67,6 +93,10 @@ class RegionCommand {
             Material.REDSTONE_BLOCK,
             Material.LAPIS_BLOCK
         )
+
+        val displays: MutableSet<BlockDisplay> = mutableSetOf()
+
+
         regions.forEachIndexed { index, region ->
             if (region.cuboid == null){
                 return@forEachIndexed
@@ -76,7 +106,6 @@ class RegionCommand {
             val x2 = region.cuboid.x2
             val z1 = region.cuboid.z1
             val z2 = region.cuboid.z2
-            val y = actor.location.y // Use the player's current altitude
 
             val corners = listOf(
                 Location(world, x1.toDouble(), -64.0, z1.toDouble()),
@@ -89,30 +118,34 @@ class RegionCommand {
 
             val material = materials[index % materials.size]
 
-            val displays: MutableSet<BlockDisplay> = mutableSetOf()
-
             corners.forEach {
-                for (i in -65..320){
+                for (i in -65..320) {
                     it.y = i.toDouble()
-                    val display: BlockDisplay? = world.spawn(it, BlockDisplay::class.java, { entity ->
+                    val display: BlockDisplay? = world.spawn(it, BlockDisplay::class.java) { entity ->
                         if (it.y % 6 == 0.0) {
                             entity.setBlock(material.createBlockData())
                             displays.add(entity)
-                            if (!relatedRegions.contains(region)){
-                                relatedRegions.put(region, material)
+                            if (!relatedRegions.contains(region)) {
+                                relatedRegions[region] = material
                             }
-                            return@spawn
+                        } else {
+                            entity.setBlock(Material.GLASS.createBlockData())
+                            displays.add(entity)
                         }
-                        entity.setBlock(Material.GLASS.createBlockData())
-                        displays.add(entity)
-                    })
+
+                        Bukkit.getOnlinePlayers().forEach { player ->
+                            if (player != actor) {
+                                player.hideEntity(Factions.get(), entity)
+                            }
+                        }
+                    }
                 }
             }
-            mapsEnabled.put(actor, displays)
+            mapsEnabled[actor] = displays
         }
         actor.send("<gray><st>---------------------------------------------------</st></gray>")
         relatedRegions.forEach { region, material ->
-            actor.sendColorizedMessageFromMessagesFile("map.found-region", Placeholder("{region}", region.name),
+            actor.sendColorizedMessageFromMessagesFile("region.map.found-region", Placeholder("{region}", region.name),
                 Placeholder("{material}", material.name))
         }
         actor.send("<gray><st>---------------------------------------------------</st></gray>")

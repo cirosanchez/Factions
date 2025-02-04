@@ -1,5 +1,6 @@
 package me.cirosanchez.factions.model.region
 
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes.world
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.model.region.util.RegionListener
 import org.bukkit.Location
@@ -55,6 +56,18 @@ class RegionManager {
         return getRegion(player.location)
     }
 
+    fun getAbsoluteRegion(location: Location): Region? {
+        val world = location.world
+        val set = regions[world] ?: run {
+            plugin.logger.info("$location is in a unregistered world. PLEASE CONTACT SUPPORT")
+            return null
+        }
+
+        val region = set.firstOrNull { it.cuboid!!.contains(location) }
+
+        return region
+    }
+
     fun getRegion(location: Location): Region? {
         val world = location.world
         val set = regions[world] ?: run {
@@ -62,7 +75,7 @@ class RegionManager {
             return null
         }
 
-        val region = set.filter { it.cuboid!!.contains(location) }.firstOrNull()
+        val region = set.firstOrNull { it.cuboid!!.contains(location) }
         if (region == null && world.uid != plugin.worldManager.wildernessWorld.uid){
             return warzone
         }
@@ -133,4 +146,9 @@ class RegionManager {
         return set
     }
 
+    fun removeRegion(region: Region){
+        this.regions.values.forEach {
+            it.remove(region)
+        }
+    }
 }

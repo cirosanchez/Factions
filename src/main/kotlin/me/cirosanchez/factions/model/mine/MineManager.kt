@@ -88,13 +88,30 @@ class MineManager : Manager {
 
     fun getMine(loc: Location): Mine? {
         mines.values.forEach {
-            if (it.claim == null || it.claim!!.cuboid == null) return@forEach
+            if (it.cuboid == null) return@forEach
 
-            if (it.claim!!.cuboid!!.contains(loc)) {
-                return it
-            }
+            if (it.cuboid!!.contains(loc)) return it
         }
         return null
+    }
+
+    fun getMineC(loc: Location): Mine? {
+        mines.values.forEach {
+            if (it.claim == null){
+                println("claim is null")
+                return@forEach
+            }
+
+
+            if (it.claim!!.cuboid == null) {
+                println("claim's cuboid is null")
+                return@forEach
+            }
+
+            if (it.claim!!.cuboid!!.contains(loc)) return it
+        }
+        return null
+
     }
 
     fun getMine(region: Region): Mine? {
@@ -107,6 +124,7 @@ class MineManager : Manager {
         }
         return null
     }
+
 
     fun removeMine(mine: Mine) {
         mines.remove(mine.name)

@@ -8,7 +8,6 @@ import me.cirosanchez.clib.placeholder.Placeholder
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.listener.PlayerListener
 import me.cirosanchez.factions.model.mine.Mine
-import me.cirosanchez.factions.model.mine.MineManager
 import me.cirosanchez.factions.util.WandSession
 import me.cirosanchez.factions.util.WandType
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -18,11 +17,7 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import revxrsal.commands.annotation.Command
-import revxrsal.commands.annotation.DefaultFor
-import revxrsal.commands.annotation.Description
-import revxrsal.commands.annotation.Named
-import revxrsal.commands.annotation.Subcommand
+import revxrsal.commands.annotation.*
 import revxrsal.commands.bukkit.annotation.CommandPermission
 
 
@@ -39,7 +34,13 @@ class MineCommand {
         val meta = item.itemMeta
         meta.displayName("<yellow>Mine Claiming Wand</yellow>".colorize())
 
-        val lore = listOf<String>("<yellow>Left-Click</yellow> to set position 1.","","<yellow>Right-Click</yellow> to set position 2.", "", "<yellow>Left-Click+Shift</yellow> to claim.")
+        val lore = listOf<String>(
+            "<yellow>Left-Click</yellow> to set position 1.",
+            "",
+            "<yellow>Right-Click</yellow> to set position 2.",
+            "",
+            "<yellow>Left-Click+Shift</yellow> to claim."
+        )
         meta.lore(lore.map { it.colorize() })
 
         meta.isUnbreakable = true
@@ -58,7 +59,13 @@ class MineCommand {
 
     @Subcommand("create")
     @CommandPermission("factions.command.mine.create")
-    fun create(actor: Player, @Named("name") name: String, @Named("regenTime") regenTime: Long, displayName: String) {
+    fun create(
+        actor: Player,
+        @Named("name") name: String,
+        @Named("regenTime") regenTime: Long,
+        pvp: Boolean,
+        displayName: String
+    ) {
 
 
         if (mm.mineExists(name)) {
@@ -69,7 +76,17 @@ class MineCommand {
         val permission = "factions.mines.$name"
 
         val mine =
-            Mine(name, displayName, ItemStack(Material.DIAMOND_ORE), ItemStack(Material.DIAMOND), null, null, permission, regenTime)
+            Mine(
+                name,
+                displayName,
+                ItemStack(Material.DIAMOND_ORE),
+                ItemStack(Material.DIAMOND),
+                null,
+                null,
+                permission,
+                regenTime,
+                pvp
+            )
         mm.addMine(mine)
         actor.sendColorizedMessageFromMessagesFile("mine.create.created", Placeholder("{name}", name))
     }
@@ -82,7 +99,17 @@ class MineCommand {
             return
         }
 
+        val mine = mm.getMine(name)!!
+
         mm.removeMine(mm.getMine(name)!!)
+
+        if (mine.claim  != null) {
+            Factions.get().regionManager.removeRegion(mine.claim!!)
+            mine.claim!!.delete().get()
+        }
+
+        mine.delete().get()
+
         actor.sendColorizedMessageFromMessagesFile("mine.delete.deleted", Placeholder("{name}", name))
     }
 
@@ -140,11 +167,11 @@ class MineCommand {
     @CommandPermission("factions.commands.mine.list")
     fun list(actor: Player) {
         actor.send("<gray><st>---------------------------------------------------</st></gray>")
-        if (mm.mines.values.isEmpty()){
+        if (mm.mines.values.isEmpty()) {
             actor.send("No mines created yet...")
         } else {
             mm.mines.values.forEach {
-                actor.send("${it.displayName} Mine")
+                actor.send("${it.name}: ${it.displayName}")
             }
         }
         actor.send("<gray><st>---------------------------------------------------</st></gray>")
@@ -152,7 +179,7 @@ class MineCommand {
 
     @Subcommand("setDisplayName")
     @CommandPermission("factions.commands.mine.setDisplayName")
-    fun setDisplayName(actor: Player, name: String, displayName: String){
+    fun setDisplayName(actor: Player, name: String, displayName: String) {
         if (!mm.mineExists(name)) {
             actor.sendColorizedMessageFromMessagesFile("mine.delete.mine-doesnt-exist", Placeholder("{name}", name))
             return
@@ -165,7 +192,7 @@ class MineCommand {
 
     @Subcommand("setBlock")
     @CommandPermission("factions.commands.mine.setBlock")
-    fun setBlock(actor: Player, name: String){
+    fun setBlock(actor: Player, name: String) {
         if (!mm.mineExists(name)) {
             actor.sendColorizedMessageFromMessagesFile("mine.delete.mine-doesnt-exist", Placeholder("{name}", name))
             return
@@ -174,7 +201,7 @@ class MineCommand {
         val mine = mm.getMine(name)!!
         val item = actor.inventory.itemInMainHand
 
-        if (!item.type.isBlock){
+        if (!item.type.isBlock) {
             actor.sendColorizedMessageFromMessagesFile("mine.setBlock.not-block")
         }
 
@@ -184,7 +211,7 @@ class MineCommand {
 
     @Subcommand("setRegenTime")
     @CommandPermission("factions.commands.mine.setRegenTime")
-    fun setRegenTime(actor: Player, name: String, regenTime: Long){
+    fun setRegenTime(actor: Player, name: String, regenTime: Long) {
         if (!mm.mineExists(name)) {
             actor.sendColorizedMessageFromMessagesFile("mine.delete.mine-doesnt-exist", Placeholder("{name}", name))
             return
@@ -200,7 +227,7 @@ class MineCommand {
 
     @Subcommand("setReward")
     @CommandPermission("factions.commands.mine.setReward")
-    fun setRewards(actor: Player, name: String){
+    fun setRewards(actor: Player, name: String) {
         if (!mm.mineExists(name)) {
             actor.sendColorizedMessageFromMessagesFile("mine.delete.mine-doesnt-exist", Placeholder("{name}", name))
             return
@@ -209,19 +236,22 @@ class MineCommand {
         val mine = mm.getMine(name)!!
         val item = actor.inventory.itemInMainHand
 
-        if (!item.type.isItem){
+        if (!item.type.isItem) {
             actor.sendColorizedMessageFromMessagesFile("mine.setRewards.not-item")
             return
         }
 
         mine.reward = item
-        actor.sendColorizedMessageFromMessagesFile("mine.setRewards.not-item", Placeholder("{item}", MiniMessage.miniMessage().serialize(item.displayName())))
+        actor.sendColorizedMessageFromMessagesFile(
+            "mine.setRewards.not-item",
+            Placeholder("{item}", MiniMessage.miniMessage().serialize(item.displayName()))
+        )
     }
 
 
     @Subcommand("setClaim")
     @CommandPermission("factions.commands.mine.setClaim")
-    fun setClaim(actor: Player, name: String){
+    fun setClaim(actor: Player, name: String) {
         if (!mm.mineExists(name)) {
             actor.sendColorizedMessageFromMessagesFile("mine.delete.mine-doesnt-exist", Placeholder("{name}", name))
             return
@@ -236,7 +266,7 @@ class MineCommand {
 
     @Subcommand("setCuboid")
     @CommandPermission("factions.commands.mine.setCuboid")
-    fun setCuboid(actor: Player, name: String){
+    fun setCuboid(actor: Player, name: String) {
         if (!mm.mineExists(name)) {
             actor.sendColorizedMessageFromMessagesFile("mine.delete.mine-doesnt-exist", Placeholder("{name}", name))
             return
@@ -249,4 +279,26 @@ class MineCommand {
         PlayerListener.wandPlayers.put(actor, WandSession(null, null, WandType.MINE_CUBOID))
     }
 
+    @Subcommand("togglepvp")
+    @CommandPermission("factions.commands.mine.togglepvp")
+    fun togglePvP(actor: Player, name: String) {
+        if (!mm.mineExists(name)) {
+            actor.sendColorizedMessageFromMessagesFile("mine.delete.mine-doesnt-exist", Placeholder("{name}", name))
+            return
+        }
+
+        val mine = mm.getMine(name)!!
+
+        mine.pvp = !mine.pvp
+
+        var string = ""
+
+        if (mine.pvp) {
+            string = "<green>enabled</green>"
+        } else {
+            string = "<red>disabled</red>"
+        }
+
+        actor.sendColorizedMessageFromMessagesFile("mine.togglepvp.set", Placeholder("{pvp}", string))
+    }
 }

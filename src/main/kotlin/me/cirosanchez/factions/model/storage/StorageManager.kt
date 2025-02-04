@@ -1,13 +1,10 @@
 package me.cirosanchez.factions.model.storage
 
-import me.cirosanchez.clib.cLib
-import me.cirosanchez.clib.exception.InvalidConfigurationException
 import me.cirosanchez.clib.storage.MongoDB.collection
 import me.cirosanchez.clib.storage.MongoSerializable
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.model.Manager
-
-import org.bukkit.Bukkit
+import me.cirosanchez.factions.model.event.Event
 
 import kotlin.reflect.KClass
 
@@ -18,7 +15,7 @@ class StorageManager : Manager {
         obj.save().get()
     }
 
-    fun <T : MongoSerializable> readObjects(type: KClass<T>): List<T> {
+    fun <T : MongoSerializable> readObjects(type: KClass<Event>): List<T> {
         val list =  collection(type).find().get().toList()
 
         if (list.isEmpty()) return listOf<T>()

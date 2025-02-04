@@ -1,5 +1,6 @@
 player-doesnt-exist: "<red>Player {name} doesn't exist.</red>"
 region-change: "<yellow>Entering: {to-region}, Leaving: {from-region}</yellow>"
+cant-break: "<red>You can't break here!</red>"
 
 spawn:
   teleporting: "<green>Teleporting you to spawn in {seconds}s.</green>"
@@ -102,7 +103,8 @@ mine:
   claimed: "<green>Claimed between {pos1} and {pos2} for mine {mine}</green>"
   mine-doesnt-exist: "<red>Mine with name <white>{name}</white> doesn't exist.</red>"
   positions-missing: "<red>Set all the positions to finish claiming process.</red>"
-  no-permission-to-enter: "<red>You don't have enough permissions to enter this mine claim!</red>"
+  no-permission-to-break: "<red>You don't have enough permissions to use this mine!</red>"
+  no-pvp-mine: "<red>This is a no-pvp mine, you can't damage other players!</red>"
   default:
     1: "<red>Mine Commands</red>"
     2: "<gray><st>---------------------------------------------------</st></gray>"
@@ -132,6 +134,8 @@ mine:
   setRewards:
     not-item: "<red>The item you have in your hand is not a item!</red>"
     set: "Set new reward to {item}"
+  togglepvp:
+    set: "Set mine pvp to: {pvp}"
 
 region:
   default:

@@ -13,6 +13,7 @@ import me.cirosanchez.factions.command.SpawnCommand
 import me.cirosanchez.factions.command.TeamCommand
 import me.cirosanchez.factions.listener.PlayerListener
 import me.cirosanchez.factions.model.configuration.ConfigurationManager
+import me.cirosanchez.factions.model.event.EventManager
 import me.cirosanchez.factions.model.mine.MineManager
 import me.cirosanchez.factions.model.region.RegionManager
 import me.cirosanchez.factions.model.scoreboard.ScoreboardManager
@@ -22,9 +23,12 @@ import me.cirosanchez.factions.model.team.TeamManager
 import me.cirosanchez.factions.model.user.UserManager
 import me.cirosanchez.factions.model.world.WorldManager
 import me.cirosanchez.factions.util.InventoryTypeAdapter
+import me.cirosanchez.factions.util.ItemStackAdapter
 import org.bukkit.Bukkit
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
+import kotlin.math.E
 
 
 class Factions : JavaPlugin() {
@@ -45,6 +49,7 @@ class Factions : JavaPlugin() {
     val teamManager: TeamManager = TeamManager()
     val mineManager: MineManager = MineManager()
     val scoreboardManager = ScoreboardManager()
+    var eventManager = EventManager()
     lateinit var commandHandler: BukkitCommandHandler
 
     override fun onEnable() {
@@ -68,6 +73,10 @@ class Factions : JavaPlugin() {
         spawnManager.unload()
         userManager.unload()
         teamManager.unload()
+        mineManager.unload()
+        eventManager.unload()
+
+        deleteBlockDisplays()
     }
 
 
@@ -96,7 +105,7 @@ class Factions : JavaPlugin() {
             mongoURI = uri
             mongoDB = dbName
             adapters = mutableListOf(LocationAdapter, WorldAdapter,
-                DurationTypeAdapter(), InventoryTypeAdapter()) as MutableList<Adapter<Any>>
+                DurationTypeAdapter(), InventoryTypeAdapter(), ItemStackAdapter()) as MutableList<Adapter<Any>>
         }
 
         worldManager.load()
@@ -107,6 +116,15 @@ class Factions : JavaPlugin() {
         teamManager.load()
         mineManager.load()
         scoreboardManager.load()
+        eventManager.load()
+    }
+
+    fun deleteBlockDisplays() {
+        RegionCommand.mapsEnabled.values.forEach {
+            it.forEach {
+                it.remove()
+            }
+        }
     }
 
 }

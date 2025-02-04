@@ -1,5 +1,7 @@
 package me.cirosanchez.factions.util
 
+import me.cirosanchez.factions.Factions
+import me.cirosanchez.factions.model.region.Region
 import org.bukkit.Location
 
 fun Location.toPrettyString(): String {
@@ -12,6 +14,14 @@ fun Location.toPrettyStringWithoutWorld(): String {
 
 fun Location.toPrettyStringWithBrackets(): String {
     return "[$x, $y, $z]"
+}
+
+fun Location.getRegions(): Set<Region> {
+    return Factions.get().regionManager.getRegions(this)
+}
+
+fun Location.getRegion(): Region? {
+    return Factions.get().regionManager.getRegion(this)
 }
 
 

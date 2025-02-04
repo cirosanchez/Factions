@@ -76,4 +76,9 @@ class SpawnCommand {
         actor.sendColorizedMessageFromMessagesFile("spawn.wand", EmptyPlaceholder.E)
         PlayerListener.wandPlayers.put(actor, WandSession(null, null, WandType.SPAWN))
     }
+
+    @Subcommand("amiinspawn")
+    fun amIInSpawn(actor: Player){
+        actor.sendMessage(spawnManager.players.contains(actor).toString())
+    }
 }

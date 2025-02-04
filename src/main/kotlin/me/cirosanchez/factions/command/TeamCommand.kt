@@ -207,6 +207,7 @@ class TeamCommand {
         }
 
         plugin.teamManager.disbandTeam(actor)
+        team.delete().get()
         actor.sendColorizedMessageFromMessagesFile("team.disband.disbanded")
         broadcastFromConfiguration("team.disband.broadcast", Placeholder("{name}", team.name), Placeholder("{player}", actor.name))
     }
@@ -522,7 +523,20 @@ class TeamCommand {
     @Subcommand("list")
     @CommandPermission("factions.command.team.rename")
     fun list(actor: Player){
+        val teams = plugin.teamManager.teams.values
+        val pointedTeams = teams.associate { it.points to it }
+            .entries.sortedByDescending { it.key }
+            .associate { it.toPair()}
 
+
+        actor.send("<gray><st>--------------------------------------------------</st>")
+        var count = 1
+        for ((points, team) in pointedTeams) {
+            if (count >= 11) break
+            actor.send("<green>$count:</green> ${team.name}: $points points")
+            count++
+        }
+        actor.send("<gray><st>--------------------------------------------------</st>")
     }
 
 
