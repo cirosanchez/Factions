@@ -139,12 +139,34 @@ mine:
 
 region:
   default:
-    1: "<cyan><b>Region Commands</cyan>"
+    1: "<aqua><b>Region Commands</aqua>"
     2: "<gray><st>---------------------------------------------------</st></gray>"
-    3: "<cyan>/region map:</cyan> <white>Shows the corners of the claims near you.</white>"
+    3: "<aqua>/region map:</aqua> <white>Shows the corners of the claims near you.</white>"
     4: "<gray><st>---------------------------------------------------</st></gray>"
 
   map:
     no-regions-nearby: "<red>No regions nearby near you.</red>"
     found-region: "Region <green>{region}</green> is represented by <green>{material}</green>."
     removed-map: "All region boundaries columns have been removed."
+
+event:
+  default:
+    1: "<light_purple><b>Events Commands</light_blue>"
+    2: "<gray><st>---------------------------------------------------</st></gray>"
+    3: "<light_purple>/event create <name> <type> <time> <display_name></light_purple>: Create a new event."
+    4: "<light_purple>/event delete <name></light_purple>: Delete an event."
+    5: "<light_purple>/event rename <name> <newName></light_purple>: Rename an event."
+    6: "<light_purple>/event claim <name></light_purple>: Claim an event's region."
+    7: "<light_purple>/event setcapzone <name></light_purple>: Claim an event's capzone."
+    8: "<light_purple>/event settime <name> <time></light_purple>: Change an event's cap time."
+    9: "<light_purple>/event setdisplayname <name> <displayname></light_purple>: Change an event's cap time."
+    10: "<light_purple>/event addcommand <name> <command></light_purple>: Change an event's cap time."
+    11: "<light_purple>/event removecommand <name> <id></light_purple>: Change an event's cap time."
+    12: "<light_purple>/event listcommands <name> <id></light_purple>: Change an event's cap time."
+    13: "<gray><st>---------------------------------------------------</st></gray>"
+  lost-cap: "{koth} has been knocked! Time remaining: {time}"
+  is-being-capped: "{koth} is being capped! Time remaining: {time}"
+  was-capped:
+    1: "<gray><st>---------------------------------------------------</st></gray>"
+    2: "        <gray>[<green>{team}</green>] »</gray> {name} capped the {koth}!"
+    3: "<gray><st>---------------------------------------------------</st></gray>"
