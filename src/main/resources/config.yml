@@ -33,5 +33,19 @@ spawn:
 
 team-limit: 20
 
+
+koth:
+  display-name: "<aqua>{name}</aqua> <gold>KoTH</gold>"
+
+
+citadel:
+  display-name: "<dark_purple>Citadel</dark_purple>"
+  duration: 10m
+conquest:
+  display-name: "<gold>Conquest</gold>"
+  duration: 5m
+  points: 500
+  death: 40
+
 team:
   size: 20

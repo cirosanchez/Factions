@@ -15,7 +15,7 @@ class StorageManager : Manager {
         obj.save().get()
     }
 
-    fun <T : MongoSerializable> readObjects(type: KClass<Event>): List<T> {
+    fun <T : MongoSerializable> readObjects(type: KClass<T>): List<T> {
         val list =  collection(type).find().get().toList()
 
         if (list.isEmpty()) return listOf<T>()

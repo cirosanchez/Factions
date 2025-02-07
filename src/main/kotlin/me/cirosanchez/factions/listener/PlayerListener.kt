@@ -45,11 +45,11 @@ class PlayerListener : Listener {
 
     val spawnRadius = Factions.get().configurationManager.config.getInt("spawn.radius")
 
-
     companion object {
         val wandPlayers: HashMap<Player, WandSession> = hashMapOf()
         val cuboidPlayers: HashMap<Player, Mine> = hashMapOf()
         val claimPlayers: HashMap<Player, Mine> = hashMapOf()
+        val playersInsideCapzone: MutableList<Player> = mutableListOf()
     }
 
 
@@ -369,9 +369,7 @@ class PlayerListener : Listener {
 
         if (event != eventManager.activeEvent) return
 
-        if (eventManager.theresSomeoneCapping) return
-
-        eventManager.playerCapping = e.player
+        playersInsideCapzone.add(e.player)
     }
 
     @EventHandler
@@ -381,8 +379,6 @@ class PlayerListener : Listener {
 
         if (event != eventManager.activeEvent) return
 
-        if (eventManager.playerCapping != e.player) return
-
-        eventManager.playerCapping = null
+        playersInsideCapzone.remove(e.player)
     }
 }

@@ -170,3 +170,8 @@ event:
     1: "<gray><st>---------------------------------------------------</st></gray>"
     2: "        <gray>[<green>{team}</green>] »</gray> {name} capped the {koth}!"
     3: "<gray><st>---------------------------------------------------</st></gray>"
+  create:
+    already-exists: "<red>There's already an event with that name!<red>"
+    secs-cant-be-zero: "<red>Your event's time is zero or is not formated (00h11m22s)"
+    citadel-already-exists: "<red>There's already a created citadel.</red>"
+    conquest-already-exists: "<red>There's already a created conquest.</red>"
