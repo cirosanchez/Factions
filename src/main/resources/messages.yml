@@ -149,12 +149,12 @@ region:
     found-region: "Region <green>{region}</green> is represented by <green>{material}</green>."
     removed-map: "All region boundaries columns have been removed."
 
-event:
+koth:
   default:
     1: "<light_purple><b>Events Commands</light_blue>"
     2: "<gray><st>---------------------------------------------------</st></gray>"
-    3: "<light_purple>/event create <name> <type> <time> <display_name></light_purple>: Create a new event."
-    4: "<light_purple>/event delete <name></light_purple>: Delete an event."
+    3: "<light_purple>/koth create <name> <type> <time> <display_name></light_purple>: Create a new event."
+    4: "<light_purple>/koth delete <name></light_purple>: Delete an event."
     5: "<light_purple>/event rename <name> <newName></light_purple>: Rename an event."
     6: "<light_purple>/event claim <name></light_purple>: Claim an event's region."
     7: "<light_purple>/event setcapzone <name></light_purple>: Claim an event's capzone."
