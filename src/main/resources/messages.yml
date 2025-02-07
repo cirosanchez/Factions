@@ -150,6 +150,7 @@ region:
     removed-map: "All region boundaries columns have been removed."
 
 koth:
+  doesnt-exist: "<red>KoTH {name} doesn't exist!</red>"
   default:
     1: "<light_purple><b>Events Commands</light_blue>"
     2: "<gray><st>---------------------------------------------------</st></gray>"
@@ -171,7 +172,23 @@ koth:
     2: "        <gray>[<green>{team}</green>] »</gray> {name} capped the {koth}!"
     3: "<gray><st>---------------------------------------------------</st></gray>"
   create:
-    already-exists: "<red>There's already an event with that name!<red>"
-    secs-cant-be-zero: "<red>Your event's time is zero or is not formated (00h11m22s)"
+    already-exists: "<red>There's already a KoTH with name {name}!<red>"
+    secs-cant-be-zero: "<red>Your event's time is zero or is not well formated (00h11m22s)"
     citadel-already-exists: "<red>There's already a created citadel.</red>"
     conquest-already-exists: "<red>There's already a created conquest.</red>"
+  delete:
+    deleted: "Koth with name {name} has been deleted."
+  rename:
+    already-exists: "<red>Koth with the name {newName} already exists.</red>"
+    renamed: "<red>Koth named {name} was renamed to {newName}</red>"
+  settime:
+    secs-cant-be-zero: "<red>Your event's time is zero or is not well formated (00h11m22s)"
+    set: "Set time to: {time}"
+  list-commands:
+    list-format: "{id} -> {cmd}"
+  add:
+    cant-have-slash: "<red>Commands must not contain slash (/)</red>"
+    added: "Added command: {cmd}"
+  remove-command:
+    id-doesnt-exist: "<red>That ID doesnt exist! Use /koth listcommands {name} to see the ids!</red>"
+    removed: "Removed command: {cmd}"

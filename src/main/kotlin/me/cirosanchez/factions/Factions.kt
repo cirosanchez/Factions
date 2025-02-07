@@ -14,6 +14,7 @@ import me.cirosanchez.factions.command.TeamCommand
 import me.cirosanchez.factions.listener.PlayerListener
 import me.cirosanchez.factions.model.configuration.ConfigurationManager
 import me.cirosanchez.factions.model.event.EventManager
+import me.cirosanchez.factions.model.koth.KoTHManager
 import me.cirosanchez.factions.model.mine.MineManager
 import me.cirosanchez.factions.model.region.RegionManager
 import me.cirosanchez.factions.model.scoreboard.ScoreboardManager
@@ -49,7 +50,7 @@ class Factions : JavaPlugin() {
     val teamManager: TeamManager = TeamManager()
     val mineManager: MineManager = MineManager()
     val scoreboardManager = ScoreboardManager()
-    var eventManager = EventManager()
+    var kothManager = KoTHManager()
     lateinit var commandHandler: BukkitCommandHandler
 
     override fun onEnable() {

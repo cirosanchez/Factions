@@ -32,6 +32,10 @@ class KoTHManager : Manager {
         this.koths.remove(koTH.name)
     }
 
+    fun hasKoTH(string: String): Boolean {
+        return koths.contains(string)
+    }
+
 
 
     fun getKoth(string: String) = this.koths.get(string)
