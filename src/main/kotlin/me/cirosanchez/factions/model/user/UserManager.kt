@@ -27,6 +27,16 @@ class UserManager : Manager {
             }
         }
 
+        Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
+            val onlineUsers = users.keys.filter {
+                Bukkit.getOfflinePlayer(it).isOnline
+            }
+
+            onlineUsers.forEach {
+                users.get(it)!!.playtime.plusMinutes(1L)
+            }
+        }, 0L, 20L*60L)
+
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, 100L, plugin.configurationManager.config.getLong("db-saving-rate")*20)
     }
 

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 import java.time.Duration
 import java.util.*
 
-data class User(@Id val uuid: UUID, val name: String, val kills: Long, val deaths: Long, val playtime: Duration): MongoSerializable {
+data class User(@Id val uuid: UUID, val name: String, var kills: Long, var deaths: Long, val playtime: Duration): MongoSerializable {
     fun getPlayer(): Player? {
         return Bukkit.getPlayer(uuid)
     }

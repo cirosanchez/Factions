@@ -118,7 +118,7 @@ class MineManager : Manager {
         mines.values.forEach {
             if (it.claim == null) return@forEach
 
-            if (it.claim == region) {
+            if (it.claim!!.name == region.name) {
                 return it
             }
         }

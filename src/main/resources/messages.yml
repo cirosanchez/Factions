@@ -1,7 +1,16 @@
 player-doesnt-exist: "<red>Player {name} doesn't exist.</red>"
 region-change: "<yellow>Entering: {to-region}, Leaving: {from-region}</yellow>"
-cant-break: "<red>You can't break here!</red>"
+cant-break: "<red>You can't break blocks here!</red>"
+cant-place: "<red>You can't place blocks here!</red>"
+join-message:
+  1: "<gray><st>---------------------------------------------------</st></gray>"
+  2: "Welcome to <cyan>FluoriteMC</cyan> <green>%player_name%</green>!"
+  3: "Current Map: P1 S1, Team Limit 20, No Ally"
+  4: "Please, enjoy!"
+  5: "<gray><st>---------------------------------------------------</st></gray>"
 
+merchant:
+  not-inside-mine: "<red>You must be inside a Mine to open its trade menu.</red>"
 spawn:
   teleporting: "<green>Teleporting you to spawn in {seconds}s.</green>"
   teleported: "<green>Teleported you to spawn!</green>"
@@ -118,9 +127,13 @@ mine:
     10: "<red>/mine setCuboid <name> </red>: Set the area where the blocks will spawn."
     11: "<red>/mine setDisplayName <name> <display name></red>: Change the mine's display name."
     12: "<red>/mine setRegenTime <name> <time> </red>: Change the mine's regeneration time."
-    13: "<red>/mine list </red>: List all mines."
-    14: "<red>/mine reset <name>: </red> Reset the mine."
-    15: "<gray><st>---------------------------------------------------</st></gray>"
+    13: "<red>/mine list:</red: List all mines."
+    14: "<red>/mine reset <name>:</red> Reset the mine."
+    15: "<red>/mine addResult <cost>:</red> Add a new trade, the cost will represent amount needed"
+    16: "to trade and the itemInHand will represent the result."
+    17: "<red>/mine removeResult <name> <index>:</red> Remove a trade, index represents position in menu"
+    18: "where the first trade from top to bottom is 1."
+    19: "<gray><st>---------------------------------------------------</st></gray>"
   create:
     mine-exists: "<red>This mine already exists!</red>"
     created: "Mine created with name: <green>{name}</green>"
@@ -136,6 +149,11 @@ mine:
     set: "Set new reward to {item}"
   togglepvp:
     set: "Set mine pvp to: {pvp}"
+  addResult:
+    set: "Set new trade succesfully."
+  removeResult:
+    no-such-index: "<red>That index doesn't exist!</red>"
+    removed: "Removed item at index: {index}"
 
 region:
   default:
@@ -151,21 +169,29 @@ region:
 
 koth:
   doesnt-exist: "<red>KoTH {name} doesn't exist!</red>"
+  claimed: "{koth} has been claimed between {pos1} and {pos2}."
+  cuboid-claimed: "{koth}'s cuboid has been claimed between {pos1} and {pos2}."
+  gave-wand: "Gave you the KoTH claiming wand."
+  cuboid-must-be-inside-claim: "<red>The capzone must be fully inside the claim!</red>"
+  first-setup-claim: "<red>You have to claim the KoTH region before claiming the cuboid.</red>"
   default:
-    1: "<light_purple><b>Events Commands</light_blue>"
+    1: "<light_purple><b>Events Commands</light_purple>"
     2: "<gray><st>---------------------------------------------------</st></gray>"
-    3: "<light_purple>/koth create <name> <type> <time> <display_name></light_purple>: Create a new event."
-    4: "<light_purple>/koth delete <name></light_purple>: Delete an event."
-    5: "<light_purple>/event rename <name> <newName></light_purple>: Rename an event."
-    6: "<light_purple>/event claim <name></light_purple>: Claim an event's region."
-    7: "<light_purple>/event setcapzone <name></light_purple>: Claim an event's capzone."
-    8: "<light_purple>/event settime <name> <time></light_purple>: Change an event's cap time."
-    9: "<light_purple>/event setdisplayname <name> <displayname></light_purple>: Change an event's cap time."
-    10: "<light_purple>/event addcommand <name> <command></light_purple>: Change an event's cap time."
-    11: "<light_purple>/event removecommand <name> <id></light_purple>: Change an event's cap time."
-    12: "<light_purple>/event listcommands <name> <id></light_purple>: Change an event's cap time."
-    13: "<gray><st>---------------------------------------------------</st></gray>"
-  lost-cap: "{koth} has been knocked! Time remaining: {time}"
+    3: "<light_purple>/koth create <name> <type> <time> <display_name></light_purple>: Create a new koth."
+    4: "<light_purple>/koth delete <name></light_purple>: Delete an koth."
+    5: "<light_purple>/koth rename <name> <newName></light_purple>: Rename an koth."
+    6: "<light_purple>/koth claim <name></light_purple>: Claim an koth's region."
+    7: "<light_purple>/koth setcapzone <name></light_purple>: Claim an koth's capzone."
+    8: "<light_purple>/koth settime <name> <time></light_purple>: Change an koth's cap time."
+    9: "<light_purple>/koth setdisplayname <name> <displayname></light_purple>: Change an koth's cap time."
+    10: "<light_purple>/koth addcommand <name> <command></light_purple>: Change an koth's cap time."
+    11: "<light_purple>/koth removecommand <name> <id></light_purple>: Change an koth's cap time."
+    12: "<light_purple>/koth listcommands <name> <id></light_purple>: Change an koth's cap time."
+    13: "<light_purple>/koth start <name></light_purple>: Start an koth."
+    14: "<light_purple>/koth stop </light_purple>: Stop the concurring koth."
+    15: "<gray><st>---------------------------------------------------</st></gray>"
+  has-been-stopped: "{koth} has been stopped."
+  lost-cap: "{koth} has been knocked!"
   is-being-capped: "{koth} is being capped! Time remaining: {time}"
   was-capped:
     1: "<gray><st>---------------------------------------------------</st></gray>"
@@ -173,16 +199,15 @@ koth:
     3: "<gray><st>---------------------------------------------------</st></gray>"
   create:
     already-exists: "<red>There's already a KoTH with name {name}!<red>"
-    secs-cant-be-zero: "<red>Your event's time is zero or is not well formated (00h11m22s)"
-    citadel-already-exists: "<red>There's already a created citadel.</red>"
-    conquest-already-exists: "<red>There's already a created conquest.</red>"
+    secs-cant-be-zero: "<red>Your koth's time is zero or is not well formated (00h11m22s)"
+    created: "Koth with name {name} was created."
   delete:
     deleted: "Koth with name {name} has been deleted."
   rename:
     already-exists: "<red>Koth with the name {newName} already exists.</red>"
     renamed: "<red>Koth named {name} was renamed to {newName}</red>"
   settime:
-    secs-cant-be-zero: "<red>Your event's time is zero or is not well formated (00h11m22s)"
+    secs-cant-be-zero: "<red>Your koth's time is zero or is not well formated (00h11m22s)"
     set: "Set time to: {time}"
   list-commands:
     list-format: "{id} -> {cmd}"
@@ -192,3 +217,81 @@ koth:
   remove-command:
     id-doesnt-exist: "<red>That ID doesnt exist! Use /koth listcommands {name} to see the ids!</red>"
     removed: "Removed command: {cmd}"
+  stop:
+    theres-no-active-koth: "<red>There's no active KoTH!</red>"
+    stopped: "Active KoTH stopped."
+  start:
+    not-set-up: "<red>The koth {name} isn't fully set up!</red>"
+    theres-active-koth: "<red>There's an already active KoTH</red>"
+
+timer:
+  doesnt-exist: "<red>Timer with name {name} doesn't exist!</red>"
+  is-koth: "<red>This timer is a KoTH timer! You can't manipulate it!</red>"
+  default:
+    1: "<gray><st>---------------------------------------------------</st></gray>"
+    2: "<green>Timer Commands</green>"
+    3: ""
+    4: "<green>/timer create <name> <time> <text>:</green> Create a new timer."
+    5: "<green>/timer delete <name></green> Delete a timer."
+    6: "<green>/timer rename <name> <text></green> Rename a timer."
+    7: "<green>/timer reset <name></green> Reset a timer to the set time.."
+    8: "<green>/timer settime <name> <time></green> Change a timer's time."
+    9: "<green>/timer list</green> List all timers."
+    10: "<gray><st>---------------------------------------------------</st></gray>"
+  create:
+    already-exists: "<red>Timer with name {name} already exists!"
+    secs-cant-be-zero: "<red>Time is not formatted or zero! 00h11m22s</red>"
+    created: "Timer {text} has been created for {time}"
+  delete:
+    deleted: "Timer with name {name} has been deleted."
+  reset:
+    reset: "Timer with name {name} has been reset."
+  rename:
+    renamed: "Timer with name {name} has changed text to: {text}"
+  list:
+    format: "{name}:{text} -> {time}"
+
+chat:
+  staff-chat-enabled: "Staff chat has been <green>enabled.</green>"
+  staff-chat-disabled: "Staff chat has been <red>disabled.</red>"
+  admin-chat-enabled: "Admin chat has been <green>enabled.</green>"
+  admin-chat-disabled: "Admin chat has been <red>disabled.</red>"
+  no-permission: "<red>You don't have enough permissions to type in {status} status.</red>"
+  default:
+    1: "<gray><st>---------------------------------------------------</st></gray>"
+    2: "<red>Chat Commands</red>"
+    3: ""
+    4: "<red>/chat status:</red> Check the current chat's status."
+    5: "<red>/chat set <status>: Change the chat status."
+    6: "<gray><st>---------------------------------------------------</st></gray>"
+  status:
+    1: "<gray><st>---------------------------------------------------</st></gray>"
+    2: "Chat Status: {status}"
+    3: "Your chat: {chat}"
+    4: "<gray><st>---------------------------------------------------</st></gray>"
+  set:
+    set: "Set chat status to: {status}"
+    broadcast: "{actor} changed the chat status to: {status}"
+
+
+
+ability:
+  no-abilities: "<red>There's no abilities created! Use abilities.yml</red>"
+  no-ability: "<red>There's no ability by the name: <yellow>{name}</yellow></red>"
+  used: "You just used {displayName} ability item!"
+  default:
+    1: "<gray><st>---------------------------------------------------</st></gray>"
+    2: "<cyan>Ability Commands</cyan>"
+    3: ""
+    4: "<cyan>/ability get <name> <amount>: Get an ability."
+    5: "<cyan>/ability list: List all available abilities."
+    6: "<cyan>/ability gui: Open a GUI with all abilities in it."
+    7: "<cyan>/ability toggle <name>: Enable or disable an ability.</cyan>"
+    8: "<gray><st>---------------------------------------------------</st></gray>"
+  list:
+    format: "{name} -> {displayName}"
+  toggle:
+    toggled: "{status} {displayName}"
+  get:
+    given: "Gave you x{amount} of {displayName}!"
+

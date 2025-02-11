@@ -8,14 +8,17 @@ import me.cirosanchez.clib.placeholder.Placeholder
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.listener.PlayerListener
 import me.cirosanchez.factions.model.mine.Mine
+import me.cirosanchez.factions.model.region.RegionType
 import me.cirosanchez.factions.util.WandSession
 import me.cirosanchez.factions.util.WandType
 import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.MerchantRecipe
 import org.bukkit.persistence.PersistentDataType
 import revxrsal.commands.annotation.*
 import revxrsal.commands.bukkit.annotation.CommandPermission
@@ -85,7 +88,8 @@ class MineCommand {
                 null,
                 permission,
                 regenTime,
-                pvp
+                pvp,
+                mutableListOf()
             )
         mm.addMine(mine)
         actor.sendColorizedMessageFromMessagesFile("mine.create.created", Placeholder("{name}", name))
@@ -300,5 +304,72 @@ class MineCommand {
         }
 
         actor.sendColorizedMessageFromMessagesFile("mine.togglepvp.set", Placeholder("{pvp}", string))
+    }
+
+    @Subcommand("addResult")
+    @CommandPermission("factions.commands.mine.addresult")
+    fun addResult(actor: Player, name: String, cost: Int){
+        if (!mm.mineExists(name)) {
+            actor.sendColorizedMessageFromMessagesFile("mine.delete.mine-doesnt-exist", Placeholder("{name}", name))
+            return
+        }
+
+        val mine = mm.getMine(name)!!
+
+        val itemInHand = actor.inventory.itemInMainHand
+
+        val recipe = MerchantRecipe(itemInHand, 9999999)
+
+        recipe.addIngredient(mine.reward.clone().add(cost-1))
+
+        mine.merchantRecipes.add(recipe)
+        actor.sendColorizedMessageFromMessagesFile("mine.addResult.set")
+    }
+
+    @Subcommand("removeresult")
+    @CommandPermission("factions.command.mine.removeresult")
+    fun removeResult(actor: Player, name: String, index: Int){
+        if (!mm.mineExists(name)) {
+            actor.sendColorizedMessageFromMessagesFile("mine.delete.mine-doesnt-exist", Placeholder("{name}", name))
+            return
+        }
+
+        val mine = mm.getMine(name)!!
+
+        val realIndex = index-1
+
+        val recipes = mine.merchantRecipes
+
+        if (recipes.size-1 < realIndex){
+            actor.sendColorizedMessageFromMessagesFile("mine.removeResult.no-such-index")
+            return
+        }
+
+        recipes.removeAt(realIndex)
+        actor.sendColorizedMessageFromMessagesFile("mine.removeResult.removed", Placeholder("{index}", index.toString()))
+    }
+
+    @Command("merchant")
+    @CommandPermission("factions.command.merchant")
+    fun merchant(actor: Player){
+        val region = plugin.regionManager.getRegion(actor)
+
+
+
+
+        val mine = plugin.mineManager.getMine(region!!)
+
+        if (mine == null){
+            actor.sendColorizedMessageFromMessagesFile("merchant.not-inside-mine")
+            return
+        }
+
+        val merchant = Bukkit.createMerchant(mine.displayName.colorize())
+
+        mine.merchantRecipes.forEach {
+            merchant.recipes = mine.merchantRecipes
+        }
+
+        actor.openMerchant(merchant, true)
     }
 }

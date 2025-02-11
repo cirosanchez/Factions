@@ -22,6 +22,7 @@ class SpawnManager : Manager {
 
     override fun load(){
         plugin = Factions.get()
+
         seconds = Factions.get().configurationManager.config.getInt("spawn.time-to-tp")
 
         Bukkit.getScheduler().runTaskTimer(Factions.get(), PlayerSpawnTimerCountdownRunnable(this), 0L, 20L)

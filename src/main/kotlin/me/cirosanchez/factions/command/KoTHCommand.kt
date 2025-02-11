@@ -1,11 +1,20 @@
 package me.cirosanchez.factions.command
 
+import me.cirosanchez.clib.extension.colorize
 import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFile
 import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFileList
 import me.cirosanchez.clib.placeholder.Placeholder
 import me.cirosanchez.factions.Factions
+import me.cirosanchez.factions.listener.PlayerListener
 import me.cirosanchez.factions.model.koth.KoTH
+import me.cirosanchez.factions.util.WandSession
+import me.cirosanchez.factions.util.WandType
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import revxrsal.commands.annotation.Command
 import revxrsal.commands.annotation.DefaultFor
 import revxrsal.commands.annotation.Subcommand
@@ -17,6 +26,29 @@ class KoTHCommand {
 
     val plugin = Factions.get()
     val manager = plugin.kothManager
+    val item = ItemStack(Material.NETHERITE_HOE)
+
+    init {
+        val meta = item.itemMeta
+        meta.displayName("<yellow>Koth Claiming Wand</yellow>".colorize())
+
+        val lore = listOf<String>(
+            "<yellow>Left-Click</yellow> to set position 1.",
+            "",
+            "<yellow>Right-Click</yellow> to set position 2.",
+            "",
+            "<yellow>Left-Click+Shift</yellow> to claim."
+        )
+        meta.lore(lore.map { it.colorize() })
+
+        meta.isUnbreakable = true
+        meta.addEnchant(Enchantment.LURE, 10, false)
+
+        val pdc = meta.persistentDataContainer
+        pdc.set(NamespacedKey(Factions.get(), "WAND"), PersistentDataType.STRING, "YAY")
+
+        item.itemMeta = meta
+    }
 
     @DefaultFor("~")
     fun default(actor: Player) {
@@ -40,6 +72,7 @@ class KoTHCommand {
 
         val koth = KoTH(name, seconds, null, null, mutableListOf())
         manager.addKoTH(koth)
+        actor.sendColorizedMessageFromMessagesFile("koth.create.created", Placeholder("{name}", name))
     }
 
     @Subcommand("delete")
@@ -73,6 +106,38 @@ class KoTHCommand {
 
         koth.name = newName
         actor.sendColorizedMessageFromMessagesFile("koth.rename.renamed", Placeholder("{newName}", newName), Placeholder("{name}", name))
+    }
+
+    @Subcommand("setcapzone")
+    @CommandPermission("factions.command.koth.setcapzone")
+    fun setcappzone(actor: Player, name: String){
+        if (!manager.hasKoTH(name)) {
+            actor.sendColorizedMessageFromMessagesFile("koth.doesnt-exist", Placeholder("{name}", name))
+            return
+        }
+
+        val koth = manager.getKoth(name)!!
+
+        actor.inventory.addItem(item)
+        PlayerListener.kothCapzonePlayer.put(actor, koth)
+        PlayerListener.wandPlayers.put(actor, WandSession(null, null, WandType.KOTH_CAPZONE))
+        actor.sendColorizedMessageFromMessagesFile("koth.gave-wand")
+    }
+
+    @Subcommand("setclaim")
+    @CommandPermission("factions.command.koth.setcapzone")
+    fun setclaim(actor: Player, name: String){
+        if (!manager.hasKoTH(name)) {
+            actor.sendColorizedMessageFromMessagesFile("koth.doesnt-exist", Placeholder("{name}", name))
+            return
+        }
+
+        val koth = manager.getKoth(name)!!
+
+        actor.inventory.addItem(item)
+        PlayerListener.kothClaimPlayer.put(actor, koth)
+        PlayerListener.wandPlayers.put(actor, WandSession(null, null, WandType.KOTH_CLAIM))
+        actor.sendColorizedMessageFromMessagesFile("koth.gave-wand")
     }
 
     @Subcommand("settime")
@@ -132,7 +197,7 @@ class KoTHCommand {
     }
 
     @Subcommand("removecommand")
-    @CommandPermission("factions.command.koth.addcommand")
+    @CommandPermission("factions.command.koth.removecommand")
     fun removeCommand(actor: Player, name: String, id: Int){
         if (!manager.hasKoTH(name)) {
             actor.sendColorizedMessageFromMessagesFile("koth.doesnt-exist", Placeholder("{name}", name))
@@ -149,6 +214,42 @@ class KoTHCommand {
 
         val removed = list.removeAt(id)
         actor.sendColorizedMessageFromMessagesFile("koth.remove-command.removed", Placeholder("{name}", name), Placeholder("{cmd}", removed))
+    }
+
+    @Subcommand("start")
+    @CommandPermission("factions.command.koth.start")
+    fun start(actor: Player, name: String){
+        if (!manager.hasKoTH(name)) {
+            actor.sendColorizedMessageFromMessagesFile("koth.doesnt-exist", Placeholder("{name}", name))
+            return
+        }
+
+        if (manager.activeKoth != null){
+            actor.sendColorizedMessageFromMessagesFile("koth.start.theres-active-koth")
+            return
+        }
+
+
+        val koth = manager.getKoth(name)!!
+
+        if (koth.cuboid == null || koth.region == null){
+            actor.sendColorizedMessageFromMessagesFile("koth.start.not-set-up", Placeholder("{name}", name))
+            return
+        }
+
+        manager.startKoth(koth)
+    }
+
+    @Subcommand("stop")
+    @CommandPermission("factions.command.koth.stop")
+    fun stop(actor: Player){
+        if (manager.activeKoth == null){
+            actor.sendColorizedMessageFromMessagesFile("koth.stop.theres-no-active-koth")
+            return
+        }
+
+        manager.stopKoTH()
+        actor.sendColorizedMessageFromMessagesFile("koth.stop.stopped")
     }
 
     fun formatTime(string: String): Long {

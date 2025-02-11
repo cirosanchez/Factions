@@ -7,15 +7,22 @@ import me.cirosanchez.clib.adapter.impl.LocationAdapter
 import me.cirosanchez.clib.adapter.impl.WorldAdapter
 import me.cirosanchez.clib.cLib
 import me.cirosanchez.clib.exception.InvalidConfigurationException
+import me.cirosanchez.factions.command.AbilityCommand
+import me.cirosanchez.factions.command.ChatCommand
+import me.cirosanchez.factions.command.KoTHCommand
 import me.cirosanchez.factions.command.MineCommand
 import me.cirosanchez.factions.command.RegionCommand
 import me.cirosanchez.factions.command.SpawnCommand
 import me.cirosanchez.factions.command.TeamCommand
+import me.cirosanchez.factions.command.TimerCommand
 import me.cirosanchez.factions.listener.PlayerListener
+import me.cirosanchez.factions.model.ability.AbilityManager
+import me.cirosanchez.factions.model.chat.ChatManager
 import me.cirosanchez.factions.model.configuration.ConfigurationManager
-import me.cirosanchez.factions.model.event.EventManager
 import me.cirosanchez.factions.model.koth.KoTHManager
 import me.cirosanchez.factions.model.mine.MineManager
+import me.cirosanchez.factions.model.placeholder.FactionsPlaceholderAPIExtension
+import me.cirosanchez.factions.model.rank.RankManager
 import me.cirosanchez.factions.model.region.RegionManager
 import me.cirosanchez.factions.model.scoreboard.ScoreboardManager
 import me.cirosanchez.factions.model.spawn.SpawnManager
@@ -25,6 +32,8 @@ import me.cirosanchez.factions.model.user.UserManager
 import me.cirosanchez.factions.model.world.WorldManager
 import me.cirosanchez.factions.util.InventoryTypeAdapter
 import me.cirosanchez.factions.util.ItemStackAdapter
+import me.clip.placeholderapi.PlaceholderAPI
+import me.clip.placeholderapi.PlaceholderAPIPlugin
 import org.bukkit.Bukkit
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
@@ -50,7 +59,10 @@ class Factions : JavaPlugin() {
     val teamManager: TeamManager = TeamManager()
     val mineManager: MineManager = MineManager()
     val scoreboardManager = ScoreboardManager()
-    var kothManager = KoTHManager()
+    val kothManager = KoTHManager()
+    val rankManager = RankManager()
+    val chatManager = ChatManager()
+    val abilityManager = AbilityManager()
     lateinit var commandHandler: BukkitCommandHandler
 
     override fun onEnable() {
@@ -63,6 +75,11 @@ class Factions : JavaPlugin() {
         commandHandler.register(TeamCommand())
         commandHandler.register(MineCommand())
         commandHandler.register(RegionCommand())
+        commandHandler.register(TimerCommand())
+        commandHandler.register(KoTHCommand())
+        commandHandler.register(ChatCommand())
+        commandHandler.register(AbilityCommand())
+
         // Listeners
         server.pluginManager.registerEvents(PlayerListener(), this)
 
@@ -75,7 +92,7 @@ class Factions : JavaPlugin() {
         userManager.unload()
         teamManager.unload()
         mineManager.unload()
-        eventManager.unload()
+        kothManager.unload()
 
         deleteBlockDisplays()
     }
@@ -117,7 +134,15 @@ class Factions : JavaPlugin() {
         teamManager.load()
         mineManager.load()
         scoreboardManager.load()
-        eventManager.load()
+        kothManager.load()
+        rankManager.load()
+        chatManager.load()
+        abilityManager.load()
+
+
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            FactionsPlaceholderAPIExtension().register()
+        }
     }
 
     fun deleteBlockDisplays() {

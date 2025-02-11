@@ -1,0 +1,76 @@
+duration-positive: 7
+duration-negative: 7
+duration-projectile: 10
+
+
+abilities:
+  1:
+    name: "pocket-bard"
+    display-name: "<gold><b>Pocket Bard</gold>"
+    lore:
+      - "Right-Click to activate."
+    material: ORANGE_DYE
+    type: POSITIVE
+    effects:
+      HEALTH_BOOST: 1
+      REGENERATION: 2
+      RESISTANCE: 3
+      STRENGTH: 2
+  2:
+    name: "belch-bomb"
+    display-name: "<green><b>Belch Bomb</green>"
+    lore:
+      - "Right-Click to activate."
+    material: SLIME_BALL
+    type: NEGATIVE
+    radius: 8
+    effects:
+      WEAKNESS: 2
+      SLOWNESS: 1
+      NAUSEA: 1
+  3:
+    name: "rocket"
+    display-name: "<red><b>Rocket</red>"
+    lore:
+      - "Right-Click to activate."
+    material: FIREWORK_ROCKET
+    type: BOOST
+    power: 5
+  4:
+    name: "antitrap-beacon"
+    display-name: "<cyan><b>Anti Trap Beacon</cyan>"
+    lore:
+      - "Stop nearby players to place blocks."
+    material: BEACON
+    type: ANTI_TRAP
+    anti-trap-type: BLOCK
+    radius: 12
+  5:
+    name: "antitrap-wand"
+    display-name: "<cyan><b>Anti Trap Wand</cyan>"
+    lore:
+      - "Hit another player 3 times to avoid him to place blocks."
+    material: BLAZE_ROD
+    type: ANTI_TRAP
+    anti-trap-type: WAND
+    hits: 3
+  6:
+    name: "switcher"
+    display-name: "<green><b>Switcher</green>"
+    lore:
+      - "Hit a player with the snowball to switch positions with him."
+    material: SNOWBALL
+    type: PROJECTILE
+    projectile-type: SWITCH
+  7:
+    name: "evil-egg"
+    display-name: "<color:#730073>Evil Egg</color>"
+    lore:
+      - "Hit a player with this to apply negative effects to him."
+    material: EGG
+    type: PROJECTILE
+    projectile-type: POTION
+    effects:
+      BLINDNESS: 3
+      MINING_FATIGUE: 2
+      NAUSEA: 1

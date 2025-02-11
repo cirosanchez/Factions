@@ -2,8 +2,8 @@ package me.cirosanchez.factions.model.scoreboard.util
 
 import me.cirosanchez.factions.Factions
 
-class Title(val plugin: Factions) {
-    val list = plugin.configurationManager.scoreboard.getStringList("title")
+class Footer(val plugin: Factions) {
+    val list = plugin.configurationManager.scoreboard.getStringList("footer")
     var index = 0
 
     fun getNextLine(): String {

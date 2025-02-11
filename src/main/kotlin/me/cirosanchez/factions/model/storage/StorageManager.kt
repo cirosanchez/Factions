@@ -4,7 +4,7 @@ import me.cirosanchez.clib.storage.MongoDB.collection
 import me.cirosanchez.clib.storage.MongoSerializable
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.model.Manager
-import me.cirosanchez.factions.model.event.Event
+
 
 import kotlin.reflect.KClass
 

@@ -5,6 +5,7 @@ import me.cirosanchez.clib.placeholder.Placeholder
 import me.cirosanchez.clib.extension.colorize
 import me.cirosanchez.factions.Factions
 import me.cirosanchez.factions.model.team.Team
+import me.cirosanchez.factions.model.user.User
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -28,4 +29,8 @@ fun String.broadcast(vararg placeholders: Placeholder){
 
 fun broadcastFromConfiguration(key: String, vararg placeholders: Placeholder){
     CLib.instance!!.messagesFile.getString(key)?.broadcast(*placeholders)
+}
+
+fun OfflinePlayer.getUser(): User {
+    return Factions.get().userManager.getUser(this.uniqueId)!!
 }

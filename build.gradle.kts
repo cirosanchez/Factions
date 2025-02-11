@@ -1,3 +1,4 @@
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
@@ -20,13 +21,20 @@ repositories {
     }
     maven("https://jitpack.io")
     maven("https://repo.flyte.gg/releases")
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    maven("https://maven.refinedev.xyz/public-repo")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
-    implementation("com.github.cirosanchez:cLib:v0.3.0")
+    implementation("com.github.cirosanchez:cLib:fcb852536c")
     implementation("org.mongodb:bson:4.3.4")
     implementation("fr.mrmicky:fastboard:2.1.3")
+    compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("net.luckperms:api:5.4")
+
+    compileOnly(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
 
 
     val targetJavaVersion = 21
@@ -63,6 +71,13 @@ dependencies {
                 if (anotherFile.exists()){
                     anotherFile.delete()
                     println("config.yml deleted")
+                }
+
+                val scoreboardFile = file("run/plugins/Factions/scoreboard.yml")
+
+                if (scoreboardFile.exists()){
+                    scoreboardFile.delete()
+                    println("scoreboard.yml deleted")
                 }
             }
         }
