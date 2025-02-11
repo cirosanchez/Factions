@@ -9,7 +9,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
-class BoostAbility(name: String, displayName: String, lore: List<String>, material: Material, type: AbilityType, boost: Int,
+class BoostAbility(name: String, displayName: String, lore: List<String>, material: Material, type: AbilityType, val boost: Int,
                    enabled: Boolean
 ): Ability(name, displayName, lore, material, type, enabled) {
     lateinit var item: ItemStack

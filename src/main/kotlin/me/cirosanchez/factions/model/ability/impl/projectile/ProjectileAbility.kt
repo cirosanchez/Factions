@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 
-class ProjectileAbility(name: String, displayName: String, lore: List<String>, material: Material, type: AbilityType, projectileType: ProjectileType, effects: List<PotionEffect>, enabled: Boolean) : Ability(name, displayName, lore, material, type, enabled){
+class ProjectileAbility(name: String, displayName: String, lore: List<String>, material: Material, type: AbilityType, val projectileType: ProjectileType, val effects: List<PotionEffect>, enabled: Boolean) : Ability(name, displayName, lore, material, type, enabled){
     lateinit var item: ItemStack
 
     override fun getItemStack(): ItemStack {

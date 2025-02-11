@@ -9,7 +9,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
-class AntiTrapAbility(name: String, displayName: String, lore: List<String>, material: Material, type: AbilityType, antiTrapType: AntiTrapType, radius: Int, hits: Int,
+class AntiTrapAbility(name: String, displayName: String, lore: List<String>, material: Material, type: AbilityType, antiTrapType: AntiTrapType, val radius: Int, val hits: Int,
                       enabled: Boolean
 ): Ability(name, displayName, lore, material, type, enabled) {
     lateinit var item: ItemStack

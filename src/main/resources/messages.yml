@@ -279,6 +279,7 @@ ability:
   no-abilities: "<red>There's no abilities created! Use abilities.yml</red>"
   no-ability: "<red>There's no ability by the name: <yellow>{name}</yellow></red>"
   used: "You just used {displayName} ability item!"
+  hit-anti-trapper: "{actualHits}/{totalHits} remaining."
   default:
     1: "<gray><st>---------------------------------------------------</st></gray>"
     2: "<cyan>Ability Commands</cyan>"
