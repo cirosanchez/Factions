@@ -161,4 +161,11 @@ class KoTHManager : Manager {
         broadcastFromConfiguration("koth.lost-cap", Placeholder("{koth}", koTH.name))
     }
 
+    fun reset(){
+        this.koths.values.forEach {
+            it.delete().get()
+        }
+        this.koths.clear()
+
+    }
 }

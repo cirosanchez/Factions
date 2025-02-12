@@ -8,6 +8,7 @@ import me.cirosanchez.factions.util.EmptyPlaceholder
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import java.util.UUID
 
 class SpawnManager : Manager {
 
@@ -69,7 +70,11 @@ class SpawnManager : Manager {
         this.countdown.remove(p)
     }
 
-
+    fun reset(){
+        this.players.clear()
+        this.countdown.clear()
+        this.spawn = Spawn(location = null)
+    }
 }
 
 

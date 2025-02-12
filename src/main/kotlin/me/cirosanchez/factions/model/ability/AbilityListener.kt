@@ -19,8 +19,10 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -33,6 +35,7 @@ class AbilityListener(val manager: AbilityManager) : Listener {
     val playersAntiTrapped: ArrayList<Player> = arrayListOf()
     val hits: HashMap<Player, Pair<Player, Int>> = hashMapOf()
     val projectilesPlayer: HashMap<Player, ProjectileAbility> = hashMapOf()
+    val playersPendingFallDamage: MutableList<Player> = mutableListOf()
 
 
     @EventHandler
@@ -40,6 +43,9 @@ class AbilityListener(val manager: AbilityManager) : Listener {
         val item = event.item ?: return
         val player = event.player
         val pdc = item.itemMeta.persistentDataContainer
+        val action = event.action
+
+        if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) return
 
         if (!pdc.has(NamespacedKey(Factions.get(), "ABILITY-TYPE"))) return
 
@@ -57,11 +63,18 @@ class AbilityListener(val manager: AbilityManager) : Listener {
 
                 if (ability == null) return
 
+                if (!ability.enabled){
+                    player.sendColorizedMessageFromMessagesFile("ability.ability-disabled")
+                    event.isCancelled = true
+                    return
+                }
+
                 val effects = (ability as NormalAbility).effects
 
                 effects.forEach {
                     player.addPotionEffect(it)
                 }
+                player.inventory.itemInMainHand.amount--
                 player.sendColorizedMessageFromMessagesFile(
                     "ability.used",
                     Placeholder("{displayName}", ability.displayName)
@@ -79,6 +92,12 @@ class AbilityListener(val manager: AbilityManager) : Listener {
                 if (ability == null) return
                 if (ability !is NormalAbility) return
 
+                if (!ability.enabled){
+                    player.sendColorizedMessageFromMessagesFile("ability.ability-disabled")
+                    event.isCancelled = true
+                    return
+                }
+
                 val effects = ability.effects
 
                 val radius = ability.radius
@@ -90,6 +109,9 @@ class AbilityListener(val manager: AbilityManager) : Listener {
                         p.addPotionEffect(e)
                     }
                 }
+
+                player.inventory.itemInMainHand.amount--
+
                 player.sendColorizedMessageFromMessagesFile(
                     "ability.used",
                     Placeholder("{displayName}", ability.displayName)
@@ -107,11 +129,20 @@ class AbilityListener(val manager: AbilityManager) : Listener {
                 if (ability == null) return
                 if (ability !is BoostAbility) return
 
+                if (!ability.enabled){
+                    player.sendColorizedMessageFromMessagesFile("ability.ability-disabled")
+                    event.isCancelled = true
+                    return
+                }
+
 
                 val direction = player.location.direction
 
-                direction.y = ability.boost / 2.0
-                direction.multiply(ability.boost)
+                player.velocity = direction.multiply(ability.boost)
+
+                this.playersPendingFallDamage.add(player)
+
+                player.inventory.itemInMainHand.amount--
 
                 player.sendColorizedMessageFromMessagesFile(
                     "ability.used",
@@ -128,6 +159,7 @@ class AbilityListener(val manager: AbilityManager) : Listener {
 
     @EventHandler
     fun blockPlace(event: BlockPlaceEvent) {
+        val player = event.player
         val item = event.itemInHand
 
         val pdc = item.itemMeta.persistentDataContainer
@@ -152,6 +184,13 @@ class AbilityListener(val manager: AbilityManager) : Listener {
 
                 if (ability == null) return
                 if (ability !is AntiTrapAbility) return
+
+                if (!ability.enabled){
+                    player.sendColorizedMessageFromMessagesFile("ability.ability-disabled")
+                    event.isCancelled = true
+                    return
+                }
+
 
                 val players = getPlayersInRadius(event.player, ability.radius)
 
@@ -201,6 +240,10 @@ class AbilityListener(val manager: AbilityManager) : Listener {
                 if (ability == null) return
                 if (ability !is AntiTrapAbility) return
 
+                if (!ability.enabled){
+                    damager.sendColorizedMessageFromMessagesFile("ability.ability-disabled")
+                    return
+                }
 
                 if (!hits.contains(damager)) {
                     hits.put(damager, Pair(entity, 1))
@@ -255,6 +298,12 @@ class AbilityListener(val manager: AbilityManager) : Listener {
 
                     if (ability !is ProjectileAbility) return
 
+                    if (!ability.enabled){
+                        player.sendColorizedMessageFromMessagesFile("ability.ability-disabled")
+                        event.isCancelled = true
+                        return
+                    }
+
                     projectilesPlayer.put(player, ability)
                 }
 
@@ -293,6 +342,19 @@ class AbilityListener(val manager: AbilityManager) : Listener {
                     player.teleport(hitLoc)
                 }
             }
+        }
+    }
+
+    @EventHandler
+    fun entityDamage(event: EntityDamageEvent){
+        val player = event.entity
+        if (player !is Player) return
+
+        if (!playersPendingFallDamage.contains(player)) return
+
+        if (event.cause == EntityDamageEvent.DamageCause.FALL) {
+            event.isCancelled = true
+            playersPendingFallDamage.remove(player)
         }
     }
 

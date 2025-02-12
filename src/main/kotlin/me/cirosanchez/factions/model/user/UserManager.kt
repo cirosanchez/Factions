@@ -69,4 +69,11 @@ class UserManager : Manager {
         users.put(player.uniqueId, user)
         return user
     }
+
+    fun reset(){
+        this.users.forEach {
+            it.value.delete().get()
+        }
+        this.users.clear()
+    }
 }

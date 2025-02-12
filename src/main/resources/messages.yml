@@ -280,6 +280,7 @@ ability:
   no-ability: "<red>There's no ability by the name: <yellow>{name}</yellow></red>"
   used: "You just used {displayName} ability item!"
   hit-anti-trapper: "{actualHits}/{totalHits} remaining."
+  ability-disabled: "You can't use {displayName}, it's disabled!"
   default:
     1: "<gray><st>---------------------------------------------------</st></gray>"
     2: "<cyan>Ability Commands</cyan>"

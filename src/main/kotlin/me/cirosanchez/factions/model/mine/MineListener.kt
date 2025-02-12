@@ -19,8 +19,6 @@ class MineListener(val plugin: Factions) : Listener {
 
         val mine = plugin.mineManager.getMine(plugin.regionManager.getRegion(to) ?: return) ?: return
 
-        println("perm "+player.hasPermission(mine.permission))
-
         if (!player.hasPermission(mine.permission)){
             event.isCancelled = true
             player.sendColorizedMessageFromMessagesFile("mine.no-permission-to-enter")

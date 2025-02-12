@@ -151,4 +151,12 @@ class RegionManager {
             it.remove(region)
         }
     }
+
+    fun reset(){
+        this.regions.values.forEach {
+            it.forEach { r ->
+                r.delete().get()
+            }
+        }
+    }
 }

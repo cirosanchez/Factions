@@ -25,7 +25,7 @@ class AbilityManager : Manager {
     override fun load() {
         plugin = Factions.get()
         loadAbilities()
-        plugin.server.pluginManager.registerEvents(AbilityListener(), plugin)
+        plugin.server.pluginManager.registerEvents(AbilityListener(this), plugin)
     }
 
     override fun unload() {
@@ -59,7 +59,7 @@ class AbilityManager : Manager {
                     val effectsChild = child.getConfigurationSection("effects")!!
                     effectsChild.getKeys(false).forEach { effectString ->
                         val power = effectsChild.getInt(effectString)
-                        val potionEffect = PotionEffect(PotionEffectType.getByName(effectString)!!, config.getInt("duration-positive"), power, true, true, true)
+                        val potionEffect = PotionEffect(PotionEffectType.getByName(effectString)!!, config.getInt("duration-positive")*20, power, true, true, true)
                         effects.add(potionEffect)
                     }
                     val ability = NormalAbility(name, displayName, lore, material, type, effects, true, -1)
@@ -72,7 +72,7 @@ class AbilityManager : Manager {
                     val effectsChild = child.getConfigurationSection("effects")!!
                     effectsChild.getKeys(false).forEach { effectString ->
                         val power = effectsChild.getInt(effectString)
-                        val potionEffect = PotionEffect(PotionEffectType.getByName(effectString)!!, config.getInt("duration-negative"), power, true, true, true)
+                        val potionEffect = PotionEffect(PotionEffectType.getByName(effectString)!!, config.getInt("duration-negative")*20, power, true, true, true)
                         effects.add(potionEffect)
                     }
                     val ability = NormalAbility(name, displayName, lore, material, type, effects, true, radius)
@@ -107,7 +107,7 @@ class AbilityManager : Manager {
                             val effectsChild = child.getConfigurationSection("effects")!!
                             effectsChild.getKeys(false).forEach { effectString ->
                                 val power = effectsChild.getInt(effectString)
-                                val potionEffect = PotionEffect(PotionEffectType.getByName(effectString)!!, config.getInt("duration-positive"), power, true, true, true)
+                                val potionEffect = PotionEffect(PotionEffectType.getByName(effectString)!!, config.getInt("duration-negative")*20, power, true, true, true)
                                 effects.add(potionEffect)
                             }
 

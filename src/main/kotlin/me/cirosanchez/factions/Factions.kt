@@ -12,6 +12,7 @@ import me.cirosanchez.factions.command.ChatCommand
 import me.cirosanchez.factions.command.KoTHCommand
 import me.cirosanchez.factions.command.MineCommand
 import me.cirosanchez.factions.command.RegionCommand
+import me.cirosanchez.factions.command.ResetCommand
 import me.cirosanchez.factions.command.SpawnCommand
 import me.cirosanchez.factions.command.TeamCommand
 import me.cirosanchez.factions.command.TimerCommand
@@ -79,6 +80,7 @@ class Factions : JavaPlugin() {
         commandHandler.register(KoTHCommand())
         commandHandler.register(ChatCommand())
         commandHandler.register(AbilityCommand())
+        commandHandler.register(ResetCommand())
 
         // Listeners
         server.pluginManager.registerEvents(PlayerListener(), this)

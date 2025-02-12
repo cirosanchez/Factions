@@ -166,5 +166,11 @@ class MineManager : Manager {
     }
 
 
+    fun reset(){
+        this.mines.values.forEach {
+            it.delete().get()
+        }
+        this.runnables.clear()
+    }
 
 }

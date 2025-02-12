@@ -36,7 +36,7 @@ class AbilityCommand {
 
         actor.send("<gray><st>---------------------------------------------------</st></gray>")
         abilities.forEach {
-            actor.sendColorizedMessageFromMessagesFile("vability.list.format", Placeholder("{name}", it.name),
+            actor.sendColorizedMessageFromMessagesFile("ability.list.format", Placeholder("{name}", it.name),
                 Placeholder("{displayName}", it.displayName))
         }
         actor.send("<gray><st>---------------------------------------------------</st></gray>")

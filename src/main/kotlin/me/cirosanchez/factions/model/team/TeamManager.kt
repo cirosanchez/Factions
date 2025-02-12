@@ -90,5 +90,11 @@ class TeamManager : Manager {
         team.name = name
         teams.put(name, team)
     }
-    
+
+    fun reset(){
+        teams.forEach { name, team ->
+            team.delete().get()
+        }
+        teams.clear()
+    }
 }
