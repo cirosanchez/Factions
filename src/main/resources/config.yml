@@ -7,6 +7,8 @@ db-saving-rate: 30000
 
 rank-provider: "LuckPerms"
 
+# Recommended: 3000
+rtp-radius: 3000
 chat:
   format: "{team} {rank} {name} <dark_gray>»</dark_gray> <gray>{message}</gray>"
   staff-format: "<light_purple>(Staff Chat) {name}: </light_purple> <yellow>{message}</yellow>"

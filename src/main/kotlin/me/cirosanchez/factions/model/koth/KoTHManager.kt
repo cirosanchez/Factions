@@ -24,6 +24,7 @@ class KoTHManager : Manager {
     var bukkitTask: BukkitTask? = null
     var remainingTime = 0L
     var totalTimeInTicks = 0L
+    var timeString = ""
 
 
     override fun load() {
@@ -94,6 +95,7 @@ class KoTHManager : Manager {
                 bukkitTask!!.cancel()
                 bukkitTask = null
                 remainingTime = 0L
+                timeString = ""
 
                 broadcastKothCapped(activeKoth!!)
 
@@ -154,7 +156,7 @@ class KoTHManager : Manager {
     }
 
     fun broadcastKothBeingCapped(koTH: KoTH){
-        broadcastFromConfiguration("koth.is-being-capped", Placeholder("{koth}", koTH.name))
+        broadcastFromConfiguration("koth.is-being-capped", Placeholder("{koth}", koTH.name), Placeholder("{time}", ))
     }
 
     fun broadcastKothLostCap(koTH: KoTH){
@@ -166,6 +168,5 @@ class KoTHManager : Manager {
             it.delete().get()
         }
         this.koths.clear()
-
     }
 }

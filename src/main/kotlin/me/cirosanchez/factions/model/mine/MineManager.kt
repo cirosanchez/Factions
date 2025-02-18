@@ -47,7 +47,6 @@ class MineManager : Manager {
             runnables.put(mine, task)
         }
 
-        plugin.server.pluginManager.registerEvents(MineListener(plugin), plugin)
     }
 
     override fun unload() {

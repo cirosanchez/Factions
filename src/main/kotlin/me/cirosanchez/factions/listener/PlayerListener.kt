@@ -4,6 +4,7 @@ import io.papermc.paper.event.player.AsyncChatEvent
 import me.cirosanchez.clib.cuboid.Cuboid
 import me.cirosanchez.clib.extension.colorize
 import me.cirosanchez.clib.extension.placeholders
+import me.cirosanchez.clib.extension.send
 import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFile
 import me.cirosanchez.clib.extension.sendColorizedMessageFromMessagesFileList
 import me.cirosanchez.clib.placeholder.Placeholder
@@ -27,6 +28,8 @@ import net.kyori.adventure.sound.Sound.Type
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.damage.DeathMessageType.*
 import org.bukkit.entity.Player
@@ -42,8 +45,10 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.persistence.PersistentDataType
+import org.bukkit.scheduler.BukkitTask
 import java.util.*
 import java.util.function.Consumer
+import kotlin.random.Random
 
 class PlayerListener : Listener {
 
@@ -379,12 +384,6 @@ class PlayerListener : Listener {
 
                         val cuboid = Cuboid(session.pos1!!.add(0.0, -300.0, 0.0), session.pos2!!.add(0.0, 300.0, 0.0))
 
-                        cuboid.blocks.map { it.location }.forEach {
-                            if (!koth.region!!.cuboid!!.contains(it)) {
-                                p.sendColorizedMessageFromMessagesFile("koth.cuboid-must-be-inside-claim")
-                                return
-                            }
-                        }
 
                         koth.cuboid = cuboid
 
@@ -522,6 +521,8 @@ class PlayerListener : Listener {
 
         val cuboid = koth.cuboid ?: return
 
+        if (!koth.region!!.cuboid!!.contains(from)) return
+
         if (!cuboid.contains(from)){
             if (playersInsideCapzone.first() == event.player){
                 kothManager.remainingTime = kothManager.totalTimeInTicks
@@ -600,4 +601,41 @@ class PlayerListener : Listener {
         event.joinMessage = ""
     }
 
+    @EventHandler
+    fun spawnRandomTp(event: PlayerMoveEvent){
+        val p = event.player
+        val region = regionManager.getRegion(p)!!
+
+        if (region.type != RegionType.SPAWN) return
+
+
+        val to = event.to
+        val block = p.world.getBlockAt(to)
+
+        if (block.type == Material.WATER) randomTp(p)
+    }
+
+    fun randomTp(player: Player) {
+        val world = plugin.worldManager.wildernessWorld
+        val worldBorder = world.worldBorder
+
+        val size = plugin.configurationManager.config.getInt("rtp-radius")
+        var task: BukkitTask? = null
+
+        task = Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
+            val rndX = Random.nextInt(0, size+1)
+            val rndZ = Random.nextInt(0, size+1)
+
+            val block = player.world.getHighestBlockAt(rndX, rndZ)
+
+            if (block.type.isSolid) {
+                val loc = block.location
+                player.teleport(loc.add(0.0, 1.0, 0.0))
+                task!!.cancel()
+            }
+        }, 0L, 1L)
+
+
+
+    }
 }
